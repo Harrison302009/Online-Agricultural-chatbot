@@ -2,7 +2,7 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import "../globalicons.css";
+import "../../globalicons.css";
 
 export default function About() {
   const router = useRouter();
