@@ -1,8 +1,6 @@
 "use client";
 import { Box, LinearProgress, Stack, Typography } from "@mui/material";
-import { useNavigation } from "react-router-dom";
 import { useRouter } from "next/navigation";
-import "../../globalicons.css";
 
 export default function VerifyContact() {
   const router = useRouter();

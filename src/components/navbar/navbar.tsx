@@ -44,7 +44,7 @@ export function NavBar() {
         }}
         onClick={(e) => {
           e.preventDefault();
-          router.push("/contact");
+          router.push("/(public)/contact");
         }}
       >
         Contact us
