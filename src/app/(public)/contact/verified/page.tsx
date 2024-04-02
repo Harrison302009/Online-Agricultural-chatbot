@@ -1,6 +1,5 @@
 "use client";
 import { Box, Stack, Typography } from "@mui/material";
-import "../../globalicons.css";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
