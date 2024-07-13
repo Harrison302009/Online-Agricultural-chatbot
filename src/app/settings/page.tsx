@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { useAllChatMessages } from "@/modules/chat/hooks/use-all-chat-messages/use-all-chat-messages";
 import { GetAllChatMessagesResponse } from "../api/chat/route";
 import { useState } from "react";
+import { prisma } from "@/modules/prisma/lib/prisma-client/prisma-client";
 
 export default function Settings() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function Settings() {
   const [messages, setMessages] = useState<
     GetAllChatMessagesResponse["messages"]
   >([]);
+  const [profile, setProfile] = useState("");
   const { data: databaseChatMessages } = useAllChatMessages();
   const uniqueUsernames = Array.from(
     new Set(
@@ -31,6 +33,17 @@ export default function Settings() {
   const doneCustomizing = () => {
     router.back();
   };
+  function UserProfile({ session }: { session: any }) {
+    return (
+      <Image
+        src={session.user.avatarUrl}
+        height={200}
+        width={200}
+        alt="UploadedImage"
+      ></Image>
+    );
+  }
+
   return (
     <Box>
       <Stack
@@ -74,6 +87,45 @@ export default function Settings() {
               <Typography variant="h2" id="userDisplay">
                 User profile
               </Typography>
+              <br />
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  fetch("/api/pfp", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      avatarUrl: profile,
+                    }),
+                  });
+                }}
+              >
+                <input
+                  type="file"
+                  id="avatarInput"
+                  name="avatar"
+                  style={{ display: "none" }}
+                  value={profile}
+                  onChange={(t) => setProfile(t.target.value)}
+                />
+                <Image
+                  src={"/profile.jpg"}
+                  height={200}
+                  width={200}
+                  alt="Upload"
+                  id="defaultAvatar"
+                  style={{ borderRadius: 100 }}
+                  onClick={(e) => {
+                    let input = document.getElementById(
+                      "avatarInput",
+                    ) as HTMLInputElement;
+                    input.click();
+                  }}
+                ></Image>
+                <UserProfile session={session} />
+              </form>
               <br />
               <Typography variant="h4" id="userName" className="userComponents">
                 Name: Unknown 4 now

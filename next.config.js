@@ -3,7 +3,7 @@ const nextConfig = {
     appDir: true,
   },
   images: {
-    domains: ["www.gravatar.com"],
+    domains: ["res.cloudinary.com"],
   },
 };
 
