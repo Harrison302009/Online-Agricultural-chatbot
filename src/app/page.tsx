@@ -82,7 +82,7 @@ export default function Home() {
         <Stack>
           <video
             style={{
-              display: "none",
+              display: "flex",
               position: "absolute",
               right: 0,
               bottom: 0,
