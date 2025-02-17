@@ -2,18 +2,28 @@
 
 import { Box, Stack, Typography, TextField, Button } from "@mui/material";
 import email from "next-auth/providers/email";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import AICulture from "/public/Samp.png";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavBar } from "@/components/navbar/navbar";
 import "../../../../globalicons.css";
 import { useRouter } from "next/navigation";
 
+type register = {
+  id: string;
+  email: string;
+  password: string;
+};
+
 export function LoginForm() {
+  const session = useSession();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [userList, setUserList] = useState<register[]>([]);
   const [submitted, setSubmitted] = useState(false);
+  const [register, setRegister] = useState<register[]>([]);
   const router = useRouter();
   const inputStyle = {
     backgroundImage:
@@ -24,341 +34,119 @@ export function LoginForm() {
     color: "transparent",
     fontFamily: "'Indie Flower', cursive",
   };
+  useEffect(() => {
+    const APIfetch = async () => {
+      const fetcher = await fetch("/api/register", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (fetcher.ok) {
+        const data: register[] = await fetcher.json();
+        setUserList(data);
+      }
+    };
+    APIfetch();
+  }, []);
+  const EmailValidator = () => {
+    if (userList && email) {
+      const userFilter = userList.find((user) => user.email === email);
+      if (userFilter) {
+        if (password && password === userFilter.password) {
+          console.log("You may proceed");
+        } else {
+          console.log("Email or Password is incorrect");
+        }
+      }
+    } else {
+      console.log("Email is not registered");
+    }
+  };
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100vh",
+      }}
+    >
       <Stack
-        style={{
-          backgroundImage: "url('/Login.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+        sx={{
+          display: "flex",
+          position: "relative",
+          width: "100%",
+          height: "100%",
           alignItems: "center",
           justifyContent: "center",
-          display: "flex",
-          cursor: "none",
         }}
-        onMouseOver={(e) => {
-          var mouse = document.getElementById("mouse") as HTMLElement;
-          var pointer = document.getElementById("pointer") as HTMLElement;
-          console.log(mouse);
-          window.addEventListener("mousemove", (t) => {
-            mouse!.style.top = `${t.clientY}px`;
-            mouse!.style.left = `${t.clientX}px`;
-            pointer!.style.top = `${t.clientY}px`;
-            pointer!.style.left = `${t.clientX}px`;
-          });
-        }}
-        width="100%"
-        minHeight="100vh"
-        display={"flex"}
       >
-        <Image
-          src={"/cursor.png"}
-          alt="cursor"
-          id="mouse"
-          width={30}
-          height={30}
-          style={{
-            display: "block",
-            zIndex: 9999,
-            position: "absolute",
-            pointerEvents: "none",
-          }}
-          onClick={(l) => {
-            return true;
-          }}
-        ></Image>
-        <Image
-          src={"/pointer.png"}
-          alt="cursor"
-          id="pointer"
-          width={20}
-          height={30}
-          style={{
-            display: "none",
-            zIndex: 9999,
-            position: "absolute",
-            pointerEvents: "none",
-          }}
-          onClick={(l) => {
-            return true;
-          }}
-        ></Image>
-        <nav
-          style={{
-            display: "flex",
-            position: "absolute",
-            alignItems: "center",
-            justifyContent: "center",
-            wordSpacing: 2,
-            gap: 5,
-            top: 0,
+        <form
+          action="#"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const request = async () => {
+              const pair = userList.find((user) => user.email === email);
+              if (pair) {
+                if (pair.password === password) {
+                  signIn("email", { email: (e.target as any).email.value });
+                } else {
+                  alert("Incorrect Password");
+                }
+              }
+            };
+            request();
           }}
         >
-          <span className="material-symbols-outlined">home</span>
-          <p
-            style={{
-              color: "gray",
-              fontFamily: "'Indie Flower', cursive",
-              cursor: "none",
+          <Stack
+            sx={{
+              backgroundColor: "rgba(255,0,0,0.4)",
+              width: { xs: 300, sm: 345, md: 412, lg: 450, xl: 500 },
+              borderRadius: 9,
+              alignItems: "center",
+              justifyContent: "center",
             }}
-            id="home"
-            onClick={(e) => {
-              e.preventDefault();
-              router.push("/");
-            }}
-            onMouseOver={(s) => {
-              var mouse = document.getElementById("mouse") as HTMLImageElement;
-              mouse.srcset = "/pointer.png";
-              (mouse.height = 30), (mouse.width = 20);
-            }}
-            onMouseOut={(u) => {
-              var mouse = document.getElementById("mouse") as HTMLImageElement;
-              mouse.srcset = "/cursor.png";
-              (mouse.height = 30), (mouse.width = 30);
-            }}
+            spacing={2}
           >
-            Home
-          </p>
-          <span
-            className="material-symbols-outlined"
-            id="contacts"
-            style={{ marginLeft: 40 }}
-          >
-            contacts_product
-          </span>
-          <p
-            style={{
-              color: "gray",
-              fontFamily: "'Indie Flower', cursive",
-              cursor: "none",
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              router.push("/contact");
-            }}
-            onMouseOver={(s) => {
-              var mouse = document.getElementById("mouse") as HTMLImageElement;
-              mouse.srcset = "/pointer.png";
-              (mouse.height = 30), (mouse.width = 20);
-            }}
-            onMouseOut={(u) => {
-              var mouse = document.getElementById("mouse") as HTMLImageElement;
-              mouse.srcset = "/cursor.png";
-              (mouse.height = 30), (mouse.width = 30);
-            }}
-          >
-            Contact us
-          </p>
-          <span
-            className="material-symbols-outlined"
-            style={{ marginLeft: 30 }}
-          >
-            local_library
-          </span>
-          <p
-            style={{
-              color: "gray",
-              fontFamily: "'Indie Flower', cursive",
-              cursor: "none",
-            }}
-            onClick={(t) => {
-              t.preventDefault();
-              router.push("/about");
-            }}
-            onMouseOver={(s) => {
-              var mouse = document.getElementById("mouse") as HTMLImageElement;
-              mouse.srcset = "/pointer.png";
-              (mouse.height = 30), (mouse.width = 20);
-            }}
-            onMouseOut={(u) => {
-              var mouse = document.getElementById("mouse") as HTMLImageElement;
-              mouse.srcset = "/cursor.png";
-              (mouse.height = 30), (mouse.width = 30);
-            }}
-          >
-            About us
-          </p>
-          <span
-            className="material-symbols-outlined"
-            style={{ marginLeft: 50 }}
-          >
-            chat
-          </span>
-          <p
-            id="chats"
-            style={{
-              color: "gray",
-              fontFamily: "'Indie Flower', cursive",
-              cursor: "none",
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              router.push("/chat");
-            }}
-            onMouseOver={(s) => {
-              var mouse = document.getElementById("mouse") as HTMLImageElement;
-              mouse.srcset = "/pointer.png";
-              (mouse.height = 30), (mouse.width = 20);
-            }}
-            onMouseOut={(u) => {
-              var mouse = document.getElementById("mouse") as HTMLImageElement;
-              mouse.srcset = "/cursor.png";
-              (mouse.height = 30), (mouse.width = 30);
-            }}
-          >
-            P2P Chat
-          </p>
-          <span
-            className="material-symbols-outlined"
-            style={{ marginLeft: 50 }}
-          >
-            forum
-          </span>
-          <p
-            id="p2b"
-            style={{
-              color: "gray",
-              fontFamily: "'Indie Flower', cursive",
-              cursor: "none",
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              router.push("/dashboard");
-            }}
-            onMouseOver={(s) => {
-              var mouse = document.getElementById("mouse") as HTMLImageElement;
-              mouse.srcset = "/pointer.png";
-              (mouse.height = 30), (mouse.width = 20);
-            }}
-            onMouseOut={(u) => {
-              var mouse = document.getElementById("mouse") as HTMLImageElement;
-              mouse.srcset = "/cursor.png";
-              (mouse.height = 30), (mouse.width = 30);
-            }}
-          >
-            Chats & Privacy
-          </p>
-        </nav>
-        <Stack
-          style={{
-            backgroundColor: "rgba(255, 255, 255, 0.3)",
-            width: 410,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <form
-            onSubmit={(p) => {
-              p.preventDefault();
-              signIn("email", { email: (p.target as any).email.value });
-              setSubmitted(true);
-            }}
-          >
-            <Stack
-              direction={"column"}
-              style={{ height: "30vh" }}
-              spacing={5}
-              borderTop={90}
-              borderColor={"transparent"}
+            <Typography
+              variant="h4"
+              sx={{
+                display: "flex",
+                position: "relative",
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                fontFamily: "fantasy",
+                fontSize: { xs: 26, sm: 31, md: 35, lg: 38, xl: 42 },
+              }}
             >
-              <Typography
-                fontSize={22}
-                style={{ fontFamily: "'Indie Flower', cursive" }}
-                fontStyle={"normal"}
-                fontWeight={400}
-                lineHeight="normal"
-                onMouseOver={(r) => {
-                  var cursor = document.getElementById(
-                    "mouse",
-                  ) as HTMLImageElement;
-                  cursor.srcset = "/text-cursor.png";
-                }}
-                onMouseOut={(i) => {
-                  var cursor = document.getElementById(
-                    "mouse",
-                  ) as HTMLImageElement;
-                  cursor.srcset = "/cursor.png";
-                }}
-              >
-                Sign into your account
-              </Typography>
-            </Stack>
-            <Stack
-              spacing={2}
-              style={{ width: 220, height: "30vh" }}
-              borderBottom={50}
-              borderColor={"transparent"}
-            >
-              <TextField
-                name="email"
-                id="email"
-                label="Email"
-                inputProps={{ style: inputStyle }}
-                style={{
-                  width: 220,
-                  flexDirection: "column",
-                  borderRadius: 50,
-                }}
-                value={email}
-                onChange={(o) => setEmail(o.target.value)}
-                onMouseOver={(r) => {
-                  var cursor = document.getElementById(
-                    "mouse",
-                  ) as HTMLImageElement;
-                  var email = document.getElementById(
-                    "email",
-                  ) as HTMLInputElement;
-                  email.style.cursor = "none";
-                  cursor.srcset = "/text-cursor.png";
-                }}
-                onMouseOut={(i) => {
-                  var cursor = document.getElementById(
-                    "mouse",
-                  ) as HTMLImageElement;
-                  cursor.srcset = "/cursor.png";
-                }}
-                required
-              ></TextField>
-            </Stack>
-            <Stack
-              borderTop={10}
-              borderColor={"transparent"}
-              direction={"column"}
-              display={"flex"}
-              style={{ width: 220, position: "relative", bottom: 50 }}
-            >
-              <Button
-                variant="contained"
-                type="submit"
-                style={{
-                  fontFamily: "Train_One",
-                  width: 220,
-                  borderRadius: 50,
-                  backgroundColor: "purple",
-                  cursor: "none",
-                }}
-                onMouseOver={(r) => {
-                  var cursor = document.getElementById(
-                    "mouse",
-                  ) as HTMLImageElement;
-                  cursor.srcset = "/pointer.png";
-                  cursor.height = 30;
-                  cursor.width = 20;
-                }}
-                onMouseOut={(i) => {
-                  var cursor = document.getElementById(
-                    "mouse",
-                  ) as HTMLImageElement;
-                  cursor.srcset = "/cursor.png";
-                  cursor.height = 30;
-                  cursor.width = 30;
-                }}
-              >
-                <span>Login</span>
-              </Button>
-            </Stack>
-          </form>
-        </Stack>
+              Login
+            </Typography>
+            <TextField
+              label="Email"
+              type="email"
+              value={email}
+              sx={{ width: "70%" }}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                EmailValidator();
+              }}
+              type="password"
+              label="Password"
+              sx={{ width: "70%" }}
+            />
+            <Button variant="contained" type="submit">
+              Login
+            </Button>
+          </Stack>
+        </form>
       </Stack>
     </Box>
   );

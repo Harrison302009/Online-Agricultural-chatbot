@@ -206,6 +206,23 @@ export default function EditUserProfile() {
                   value={uniqueEmails}
                 />
                 <br />
+                <TextField
+                  id="address"
+                  fullWidth
+                  aria-readonly
+                  onMouseOver={(l) => {
+                    var fname = document.getElementById(
+                      "address",
+                    ) as HTMLInputElement;
+                    var cursor = document.getElementById(
+                      "mouse",
+                    ) as HTMLImageElement;
+                    cursor.srcset = "/text-cursor.png";
+                    fname.style.cursor = "none";
+                  }}
+                  onMouseOut={TextBack}
+                  value={session.data?.user.address}
+                />
                 <Button
                   variant="outlined"
                   type="submit"

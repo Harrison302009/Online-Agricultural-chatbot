@@ -2,6 +2,8 @@
 import {
   Box,
   Button,
+  Icon,
+  IconButton,
   List,
   ListItemButton,
   Stack,
@@ -15,6 +17,7 @@ import {
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import "../globalicons.css";
 
 export type User = {
   id: number;
@@ -22,13 +25,17 @@ export type User = {
   email: string;
   role: string;
   isBanned: boolean;
-  country: string;
+  address: string;
+  country?: string;
+  plan: string;
+  lastLogin: string;
 };
 
 export default function AdminPage() {
   const [adminDisplay, setAdminDisplay] = useState(false);
   const [defaultDisplay, setDefaultDisplay] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
+  const [id, setId] = useState(0);
   const session = useSession();
   const router = useRouter();
   const checkRole = async () => {
@@ -56,6 +63,22 @@ export default function AdminPage() {
       alert("Failed to ban user");
     }
   };
+  const handleKick = async (userId: number) => {
+    const request = await fetch("/api/admin/users/kick-user", {
+      method: "DELETE",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ userId }),
+    });
+    if (request.ok) {
+      alert("User kicked successfully");
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== userId));
+    } else if (request.status === 403) {
+      alert("You must be an admin to carry out this action");
+      console.error("Unauthorized access");
+    }
+  };
   const handleUnban = async (userId: number) => {
     const response = await fetch("/api/admin/users/unban-user", {
       method: "POST",
@@ -68,20 +91,33 @@ export default function AdminPage() {
       alert("User unbanned successfully");
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
-          user.id === userId ? { ...user, isBanned: true } : user,
+          user.id === userId ? { ...user, isBanned: false } : user,
         ),
       );
     } else {
       alert("Failed to ban user");
     }
   };
+  const refresh = async () => {
+    const request = await fetch("/api/admin/users", {
+      method: "GET",
+    });
+    if (request.ok) {
+      const data: User[] = await request.json();
+      setUsers(data);
+      alert("Refreshed User Table");
+    } else {
+      alert("Failed to refresh users");
+      console.error("Failed to fetch users");
+    }
+  };
   const tableStyles: React.CSSProperties = {
-    fontFamily: "'Caveat', system-ui",
+    fontFamily: "'Merienda', cursive",
     fontWeight: 300,
     fontStyle: "normal",
   };
   const headStyles: React.CSSProperties = {
-    fontFamily: "'Nerko One', system-ui",
+    fontFamily: "'Black Ops One', system-ui",
     fontWeight: 400,
     fontStyle: "normal",
   };
@@ -143,6 +179,17 @@ export default function AdminPage() {
           <Typography variant="h3">Hi {session.data?.user.role}</Typography>
           <br />
           <Typography>Users</Typography>
+          <IconButton
+            sx={{
+              display: "flex",
+              position: "relative",
+              width: "fit-content",
+              height: "fit-content",
+            }}
+            onClick={() => refresh()}
+          >
+            <span className="material-symbols-outlined">refresh</span>
+          </IconButton>
           <Table sx={{ minWidth: 500 }}>
             <TableHead>
               <TableRow>
@@ -155,8 +202,8 @@ export default function AdminPage() {
                 <TableCell width={150} sx={headStyles}>
                   Email
                 </TableCell>
-                <TableCell width={100} sx={headStyles}>
-                  Country
+                <TableCell width={200} sx={headStyles}>
+                  Address
                 </TableCell>
                 <TableCell width={80} sx={headStyles}>
                   Plan
@@ -166,6 +213,9 @@ export default function AdminPage() {
                 </TableCell>
                 <TableCell width={80} sx={headStyles}>
                   Status
+                </TableCell>
+                <TableCell width={100} sx={headStyles}>
+                  Last seen
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -185,17 +235,23 @@ export default function AdminPage() {
                   <TableCell width={150} sx={tableStyles}>
                     {user.email}
                   </TableCell>
-                  <TableCell width={100} sx={tableStyles}>
-                    {user.country}
+                  <TableCell width={200} sx={tableStyles}>
+                    {user.address}
                   </TableCell>
                   <TableCell width={80} sx={tableStyles}>
-                    Free
+                    {user.plan}
                   </TableCell>
                   <TableCell width={80} sx={tableStyles}>
                     {user.role}
                   </TableCell>
                   <TableCell width={80} sx={tableStyles}>
                     {user.isBanned ? "Banned" : "Active"}
+                  </TableCell>
+                  <TableCell width={100} sx={tableStyles}>
+                    {new Date(user.lastLogin).toLocaleString()}
+                  </TableCell>
+                  <TableCell width={80} sx={tableStyles}>
+                    <Button onClick={() => handleKick(user.id)}>Kick</Button>
                   </TableCell>
                   <TableCell width={80} sx={tableStyles}>
                     <Button

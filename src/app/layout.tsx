@@ -17,6 +17,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta
+          property="og:image"
+          content="https://aiculture-uk.vercel.app/Agri-drone.jpg"
+        />
+      </head>
       <body>
         <RootProvider>{children}</RootProvider>
       </body>

@@ -13,7 +13,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Baskervville+SC&family=Edu+VIC+WA+NT+Beginner:wght@400..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Baskervville+SC&family=Edu+VIC+WA+NT+Beginner:wght@400..700&family=Oswald:wght@200..700&family=Quicksand:wght@300..700&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Nerko+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@400..700&family=Nerko+One&family=Sofadi+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Tilt+Warp&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Caveat:wght@400..700&family=Merienda:wght@300..900&family=Quicksand:wght@300..700&family=Tilt+Warp&display=swap');
 
 .material-symbols-outlined {
   font-variation-settings:
@@ -39,6 +41,30 @@
   top: 1%;
   left: 1%;
   color: #000;
+}
+.purchase {
+  display: flex;
+    background-size: 200% auto;
+    background-image: linear-gradient(-175deg, blue 0%, purple 100%);
+    align-items: center;
+    justify-content: center;
+}
+.paystack {
+  display: flex;
+    background-size: 200% auto;
+    background-image: linear-gradient(-175deg, blue 0%, purple 100%);
+    align-items: center;
+    justify-content: center;
+    height: 37px;
+    border: transparent;
+    color: rgb(106, 106, 196);
+    font-family: monospace;
+}
+.purchase:hover {
+  display: flex;
+  background-image: linear-gradient(-175deg, blue 0%, purple 100%);
+  background-size: 200% auto;
+  animation: purchase 1s linear infinite;
 }
 #bars:hover {
   color: white;
@@ -137,6 +163,9 @@
     color: transparent;
     transition: 5s ease-in-out;
   }
+}
+@keyframes purchase {
+  to {background-position: 200% center;}
 }
 
 #idea {
@@ -492,27 +521,6 @@ option {
   font-family: monospace;
 }
 
-#aiculture {
-  background-image: linear-gradient(
-    to bottom right,
-    red,
-    aqua,
-    silver,
-    indigo,
-    blue
-  );
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  font-family: "Tilt Prism", sans-serif;
-  position: absolute;
-  top: 110px;
-  left: 500px;
-  display: flex;
-  align-items: "center";
-  justify-content: "center";
-}
 #userDisplay {
   display: flex;
   position: relative;
@@ -531,6 +539,9 @@ option {
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
+}
+.uploadButton {
+  display: none;
 }
 #editProfile {
   display: flex;

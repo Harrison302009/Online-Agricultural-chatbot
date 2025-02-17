@@ -1,3 +1,4 @@
+"use client";
 import {
   Avatar,
   Drawer,
@@ -13,13 +14,22 @@ import { faBars, faCross, faX } from "@fortawesome/free-solid-svg-icons";
 import { PointBack, PointOut } from "../mousecontrols/mousecontrol";
 import { Mice } from "../mice/mouse";
 import { Controller } from "../mouse-movement-controls/mouse-movement-controls";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import router from "next/router";
 import { useSession } from "next-auth/react";
 import MenuButton from "./components/menu-buttons/menu-buttons";
+import { CldImage } from "next-cloudinary";
 
 export function MenuBar() {
   const session = useSession();
+  const [imageLoaded, setImageLoaded] = useState(false);
+  useEffect(() => {
+    if (!session.data?.user.image) {
+      setImageLoaded(true);
+    } else {
+      setImageLoaded(false);
+    }
+  }, [session.data?.user.image]);
   return (
     <>
       <Stack
@@ -31,12 +41,23 @@ export function MenuBar() {
           justifyContent: "center",
         }}
       >
-        <Avatar sx={{ height: 100, width: 100 }}>
-          <Typography variant="h3">
-            {session.data?.user?.name?.toUpperCase().substring(0, 1) ||
-              session.data?.user?.email?.toUpperCase().substring(0, 1)}
-          </Typography>
-        </Avatar>
+        {imageLoaded ? (
+          <Avatar style={{ height: 100, width: 100 }}>
+            <Typography variant="h1">
+              {session.data?.user?.name?.substring(0, 1).toUpperCase() ||
+                session.data?.user.email?.substring(0, 1).toUpperCase()}
+            </Typography>
+          </Avatar>
+        ) : (
+          <CldImage
+            src={session.data?.user.image || ""}
+            width={100}
+            height={100}
+            alt="Uploaded Image"
+            style={{ objectFit: "cover", borderRadius: 100 }}
+            draggable="false"
+          />
+        )}
       </Stack>
       <br />
       <Stack
@@ -60,12 +81,7 @@ export function MenuBar() {
         icon="person"
       />
       <hr />
-      <MenuButton
-        link="/settings/#plans"
-        color="red"
-        text="Your plans"
-        icon="paid"
-      />
+      <MenuButton link="/plans" color="red" text="Your plans" icon="paid" />
       <hr />
       <MenuButton link="/chat" color="green" text="User Chat" icon="p2p" />
       <hr />

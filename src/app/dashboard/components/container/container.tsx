@@ -26,9 +26,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { MenuBar } from "@/components/menubar/menubar";
 import MobileDisplay from "../../components/mobile-display/mobile-display";
+import usePusher from "@/modules/hooks/pusher/pusher";
 import TabletDisplay from "../../components/tablet-display/tablet-display";
+import { CldImage } from "next-cloudinary";
+import mixpanel from "mixpanel-browser";
+import MixpanelComponent from "@/components/Mixpanel/Mixpanel";
 
 export default function Container() {
+  usePusher();
   const [loaded, setLoaded] = useState(false);
   const [icon, setIcon] = useState("");
   const [warningMessage, setWarningMessage] = useState(false);
@@ -39,14 +44,79 @@ export default function Container() {
   const [weatherMessage, setWeatherMessage] = useState("");
   const [subject, setSubject] = useState("");
   const [admin, setAdmin] = useState(false);
+  const [percentage, setPercentage] = useState("");
+  const [user, setUser] = useState(0);
   const [content, setContent] = useState("");
+  const [location, setLocation] = useState({
+    street: null,
+    city: null,
+    state: null,
+    country: null,
+  });
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [countryLoaded, setCountryLoaded] = useState(false);
   const [weatherLoaded, setWeatherLoaded] = useState(false);
-  const [userCountry, setUserCountry] = useState();
+  const [userStreet, setUserStreet] = useState();
   const [userState, setUserState] = useState();
   const session = useSession();
   const router = useRouter();
-  console.log(`Username: ${session.status}`);
+  const [count, setCount] = useState(0);
+  const [percount, setPercount] = useState(0.0);
+  const perstep = 0.1;
+  const targetValue = user;
+  const percentValue = parseInt(percentage);
+  const incrementSpeed = 50;
+  const perspeed = 50;
+  const step = 1;
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((registration) => {
+          console.log("Service Worker registered:", registration.scope);
+        })
+        .catch((err) => {
+          console.error("Service Worker registration failed:", err);
+        });
+    }
+  }, []);
+  useEffect(() => {
+    if (user) {
+      const interval = setInterval(() => {
+        setCount((prevCount) => {
+          if (prevCount >= targetValue) {
+            clearInterval(interval);
+            return prevCount;
+          }
+          return prevCount + step;
+        });
+      }, incrementSpeed);
+
+      return () => clearInterval(interval);
+    }
+  }, [targetValue, incrementSpeed, step, user]);
+  useEffect(() => {
+    if (!session.data?.user.image) {
+      setImageLoaded(true);
+    } else {
+      setImageLoaded(false);
+    }
+  }, [session.data?.user.image]);
+  useEffect(() => {
+    if (percentage) {
+      const interval = setInterval(() => {
+        setPercount((prevCount) => {
+          if (prevCount >= percentValue) {
+            clearInterval(interval);
+            return prevCount;
+          }
+          return Math.min(prevCount + perstep, percentValue);
+        });
+      }, perspeed);
+
+      return () => clearInterval(interval);
+    }
+  }, [percentValue, perspeed, perstep, user, percentage]);
   const handleOpen = () => {
     setOpen(true);
     updateCountry();
@@ -64,7 +134,7 @@ export default function Container() {
     const response = await fetch("/api/country", {
       method: "POST",
       headers: { "Content-type": "application/json" },
-      body: JSON.stringify({ userCountry }),
+      body: JSON.stringify(location),
     });
     if (response.ok) {
       console.log(
@@ -75,8 +145,23 @@ export default function Container() {
     }
   };
   useEffect(() => {
+    const getNumbers = async () => {
+      const count = await fetch("/api/admin/users/count");
+      const apiPercent = await fetch("/api/admin/users/percent");
+      const data = await count.json();
+      const value = await apiPercent.json();
+      console.log(data);
+      setUser(data);
+      setPercentage(value);
+      if (value !== 0.0) {
+        console.log(typeof percentage);
+      }
+    };
+    getNumbers();
+  }, [percentage]);
+  useEffect(() => {
     const findUserCountryData = data.find(
-      (item) => item.country === userCountry,
+      (item) => item.country === location.country,
     );
 
     if (findUserCountryData) {
@@ -89,7 +174,7 @@ export default function Container() {
         const response = await fetch("/api/country", {
           method: "POST",
           headers: { "Content-type": "application/json" },
-          body: JSON.stringify({ userCountry }),
+          body: JSON.stringify(location),
         });
         if (response.ok) {
           console.log(
@@ -105,7 +190,7 @@ export default function Container() {
       setSubject(`Error`);
       setContent("We don't support your country");
     }
-  }, [userCountry, weatherData, session.data?.user]);
+  }, [location, weatherData, session.data?.user]);
 
   useEffect(() => {
     if (session.status === "unauthenticated") {
@@ -200,6 +285,29 @@ export default function Container() {
     );
   };
   useEffect(() => {
+    mixpanel.init(`${process.env.MIXPANEL_TOKEN}`, {
+      debug: true,
+      ignore_dnt: true,
+      track_pageview: true,
+    });
+    mixpanel.track("Sign Up");
+    mixpanel.register({
+      name: session.data?.user.name || "User",
+      email:
+        session.data?.user.email || `${session.data?.user.name}@aiculture.uk`,
+      plan: session.data?.user.plan || "new",
+      country: session.data?.user.country || "Unknow",
+      role: session.data?.user.role || "user",
+    });
+  }, [
+    session.data?.user.country,
+    session.data?.user.email,
+    session.data?.user.id,
+    session.data?.user.name,
+    session.data?.user.plan,
+    session.data?.user.role,
+  ]);
+  useEffect(() => {
     navigator.geolocation.getCurrentPosition(async (position) => {
       const { latitude, longitude } = position.coords;
       const weather = await fetchWeather(latitude, longitude);
@@ -213,18 +321,40 @@ export default function Container() {
   }, [weatherData]);
 
   useEffect(() => {
-    if (userCountry) {
+    if (location.country) {
       setCountryLoaded(true);
     }
-  }, [userCountry]);
+  }, [location]);
 
   useEffect(() => {
+    const fetchUserCountry = async (latitude: number, longitude: number) => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const { latitude, longitude } = position.coords;
+          const apiKey = "570ee4b49ecf4bf786052677c5f4a082";
+          const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}&pretty=1`;
+          try {
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.results.length > 0) {
+              setLocation({
+                ...location,
+                country: data.results[0].components.country,
+                street: data.results[0].formatted,
+              });
+            }
+          } catch (error) {
+            console.error("Error fetching user country:", error);
+          }
+        });
+      }
+    };
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const { latitude, longitude } = coords;
 
       fetchUserCountry(latitude, longitude);
     });
-  }, []);
+  }, [location]);
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(({ coords }) => {
       const { latitude, longitude } = coords;
@@ -262,7 +392,12 @@ export default function Container() {
           const response = await fetch(url);
           const data = await response.json();
           if (data.results.length > 0) {
-            setUserCountry(data.results[0].components.country);
+            setLocation({
+              ...location,
+              country: data.results[0].components.country,
+              street: data.results[0].components.road,
+            });
+            console.log(`Your street is this: ${data.results[0].formatted}`);
           }
         } catch (error) {
           console.error("Error fetching user country:", error);
@@ -427,19 +562,35 @@ export default function Container() {
               top: "25%",
             }}
           >
-            <Avatar
-              sx={{
-                height: { xs: 25, md: 29, lg: 32, xl: 150 },
-                width: { xs: 25, md: 29, lg: 32, xl: 150 },
-                cursor: "pointer",
-              }}
-              onClick={handleOpen}
-            >
-              <Typography variant="h6">
-                {session.data?.user?.name?.toUpperCase().substring(0, 1) ||
-                  session.data?.user?.email?.toUpperCase().substring(0, 1)}
-              </Typography>
-            </Avatar>
+            {imageLoaded ? (
+              <Avatar
+                sx={{
+                  height: { xs: 25, sm: 27, md: 29, lg: 32, xl: 150 },
+                  width: { xs: 25, sm: 27, md: 29, lg: 32, xl: 150 },
+                  cursor: "pointer",
+                }}
+                onClick={handleOpen}
+              >
+                <Typography variant="h6">
+                  {session.data?.user?.name?.substring(0, 1).toUpperCase() ||
+                    session.data?.user.email?.substring(0, 1).toUpperCase()}
+                </Typography>
+              </Avatar>
+            ) : (
+              <CldImage
+                src={session.data?.user.image || ""}
+                width={32}
+                height={32}
+                alt="Uploaded Image"
+                style={{
+                  objectFit: "cover",
+                  borderRadius: 100,
+                  cursor: "pointer",
+                }}
+                draggable="false"
+                onClick={handleOpen}
+              />
+            )}
           </Stack>
         </Stack>
         {loaded ? (
@@ -486,12 +637,12 @@ export default function Container() {
         >
           <GlobalCard
             icon={"grid_view"}
-            subject="5+"
+            subject={`${count}+`}
             content="Users have connected"
           ></GlobalCard>
           <GlobalCard
             icon={"commit"}
-            subject="5.7%"
+            subject={`${percount.toFixed(1)}%`}
             content="Active users on the site"
           ></GlobalCard>
           <GlobalCard

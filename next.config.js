@@ -2,7 +2,7 @@
 
 const nextConfig = {
   images: {
-    domains: ["www.gravatar.com"],
+    domains: ["res.cloudinary.com"],
   },
 };
 

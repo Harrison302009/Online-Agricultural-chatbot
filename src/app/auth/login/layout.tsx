@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     default: "Login",
   },
   description:
-    "Login to your AICulture account to get the bext AI agriculture experience",
+    "Login to your AICulture account to get the best AI agriculture experience",
 };
 
 export default function RootLayout({

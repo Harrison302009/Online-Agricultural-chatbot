@@ -35,19 +35,25 @@ model Session {
 }
 
 model User {
-    id            String        @id @default(cuid())
-    name          String?
-    email         String?       @unique
-    username      String?       @unique
-    country       String        @default("Unknown")
-    role           String       @default("user")
-    isBanned        Boolean     @default(false)
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    Message       Message[]
-    ChatMessage   ChatMessage[]
+    id              String        @id @default(cuid())
+    name            String?
+    email           String?       @unique
+    password        String?
+    username        String?       @unique
+    lastLogin       DateTime      @default(now())
+    country         String        @default("Unknown")
+    address         String        @default("Unknown")
+    role            String        @default("user")
+    isBanned        Boolean       @default(false)
+    plan            String        @default("new")
+    receivedMessage Boolean       @default(false)
+    emailVerified   DateTime?
+    image           String?
+    accounts        Account[]
+    sessions        Session[]
+    Message         Message[]
+    ChatMessage     ChatMessage[]
+    MessageSent     MessageSent[]
 }
 
 model VerificationToken {
@@ -71,7 +77,23 @@ model Message {
 model ChatMessage {
     id        Int      @id @default(autoincrement())
     message   String
+    image     String?
     createdAt DateTime @default(now())
     ownerId   String?
     owner     User?    @relation(fields: [ownerId], references: [id])
+}
+
+model MessageSent {
+    id        Int      @id @default(autoincrement())
+    message   String
+    image     String?
+    sent      Boolean  @default(false)
+    createdAt DateTime @default(now())
+    ownerId   String?
+    owner     User?    @relation(fields: [ownerId], references: [id])
+}
+
+model RegisteredUsers {
+    email    String @id @unique @default("test@example.com")
+    password String?
 }

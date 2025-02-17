@@ -33,6 +33,7 @@ export const POST = async (req: Request) => {
     data: {
       message: messageInput.message,
       ownerId: session.user.id,
+      image: session.user.image || "new-user_enkjde",
     },
   });
 
@@ -47,6 +48,8 @@ export const POST = async (req: Request) => {
     username: user?.username,
     createdAt: savedMessage.createdAt,
     owner: user,
+    ownerId: session.user.id,
+    image: savedMessage.image,
   });
 
   return NextResponse.json(savedMessage);
@@ -60,13 +63,14 @@ export interface GetAllChatMessagesResponse {
       email: string | null;
       username: string | null;
       emailVerified: Date | null;
-      image: string | null;
+      image: string;
     } | null;
   } & {
     id: number;
     message: string;
     createdAt: Date;
     ownerId: string | null;
+    image: string;
   })[];
 }
 
