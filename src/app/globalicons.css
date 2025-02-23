@@ -16,6 +16,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@400..700&family=Nerko+One&family=Sofadi+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Tilt+Warp&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Caveat:wght@400..700&family=Merienda:wght@300..900&family=Quicksand:wght@300..700&family=Tilt+Warp&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Englebert&family=Ga+Maamli&family=Irish+Grover&family=Luckiest+Guy&family=Merienda:wght@300..900&family=Oswald:wght@200..700&family=Playwrite+PL:wght@100..400&display=swap');
 
 .material-symbols-outlined {
   font-variation-settings:
@@ -83,8 +84,8 @@
 }
 
 ::selection {
-  background-color: blue;
-  color: red;
+  background-color: black;
+  color: greenyellow;
 }
 
 @keyframes amazon {
