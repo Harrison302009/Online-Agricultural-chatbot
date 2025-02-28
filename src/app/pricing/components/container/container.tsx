@@ -18,7 +18,7 @@ export default function PlanHolder() {
   const [basicDisplay, setBasicDisplay] = useState("");
   const [premiumDisplay, setPremiumDisplay] = useState("");
   const [loaded, setLoaded] = useState(false);
-  const [application, setApplication] = useState<User[]>([] || "");
+  const [application, setApplication] = useState<User[]>([]);
   const [available, setAvailable] = useState(false);
   const [premiumPrice, setPremiumPrice] = useState("");
   const [open, setOpen] = useState(false);

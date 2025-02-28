@@ -41,6 +41,7 @@ model User {
     password        String?
     username        String?       @unique
     lastLogin       DateTime      @default(now())
+    phoneNumber     String?
     country         String        @default("Unknown")
     address         String        @default("Unknown")
     role            String        @default("user")
@@ -94,6 +95,6 @@ model MessageSent {
 }
 
 model RegisteredUsers {
-    email    String @id @unique @default("test@example.com")
+    email    String  @id @unique @default("test@example.com")
     password String?
 }

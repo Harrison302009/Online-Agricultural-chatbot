@@ -19,7 +19,6 @@ import { MenuBar } from "@/components/menubar/menubar";
 import { CldImage } from "next-cloudinary";
 import { registerServiceWorker } from "@/utils/register-service-worker";
 import { DeleteOutline } from "@mui/icons-material";
-import { deleteMessageAction } from "./delete-message-action";
 
 const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
   cluster: "mt1",
@@ -98,23 +97,8 @@ export default function Container() {
                     body: `${data.message}`,
                     icon: "/chat-user.jpg",
                     data: { url: "/chat" },
-                    vibrate: [200, 100, 100],
                     badge: "/Samp.png",
-                    image: "/ai-mail.png",
-                    timestamp: new Date().getTime(),
                     requireInteraction: true,
-                    actions: [
-                      {
-                        action: "reply",
-                        title: "Reply",
-                        icon: "/reply.png",
-                      },
-                      {
-                        action: "dismiss",
-                        title: "Dismiss",
-                        icon: "/dismiss.png",
-                      },
-                    ],
                   },
                 );
               });
@@ -156,7 +140,7 @@ export default function Container() {
   const deleteMessage = useCallback(
     async (id: number) => {
       console.log("@@ id: ", id);
-      const response = await deleteMessageAction(id);
+      const response = null;
       console.log("@@ response: ", response);
       setMessages([]);
       await refetchDbMessages();

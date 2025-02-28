@@ -7,11 +7,11 @@ import Container from "./components/container/container";
 
 export default async function Chat() {
   const session = await getServerSession();
-  if (session.user.isBanned) {
-    redirect("/banned");
-  }
   if (!session) {
     redirect("/auth/login");
+  }
+  if (session.user.isBanned) {
+    redirect("/banned");
   }
 
   return (

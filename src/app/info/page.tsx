@@ -1,10 +1,8 @@
-import { Box } from "@mui/material";
-import Container from "./components/container/container";
 import { getServerSession } from "@/modules/auth/lib/get-server-session/get-server-session";
 import { redirect } from "next/navigation";
-import mixpanel from "mixpanel-browser";
+import Container from "./components/container/container";
 
-export default async function Dashboard() {
+export default async function RegistrationInformation() {
   const session = await getServerSession();
   if (!session) {
     redirect("/auth/login");
@@ -12,12 +10,8 @@ export default async function Dashboard() {
   if (session.user.isBanned) {
     redirect("/banned");
   }
-  if (!session.user.name) {
-    redirect("/info");
+  if (session.user.name) {
+    redirect("/dashboard");
   }
-  return (
-    <Box>
-      <Container />
-    </Box>
-  );
+  return <Container />;
 }

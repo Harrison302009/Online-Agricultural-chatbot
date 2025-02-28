@@ -18,21 +18,8 @@ const usePusher = () => {
               {
                 body: `${data.message}`,
                 icon: "/chat-user.jpg",
-                image: "/ai-mail.png",
                 data: { url: "/chat" },
                 requireInteraction: true,
-                actions: [
-                  {
-                    action: "reply",
-                    title: "Reply",
-                    icon: "/reply.png",
-                  },
-                  {
-                    action: "dismiss",
-                    title: "Dismiss",
-                    icon: "/dismiss.png",
-                  },
-                ],
               },
             );
           });

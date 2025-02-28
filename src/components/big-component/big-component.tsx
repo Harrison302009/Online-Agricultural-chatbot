@@ -56,8 +56,8 @@ export default function Holder({
           <img
             src={`/${image}.jpg`}
             alt=""
-            height={"80%" || imageHeight}
-            width={"65%" || imageWidth}
+            height={"80%"}
+            width={"65%"}
             style={{ borderRadius: 9 }}
           />
         </Stack>
