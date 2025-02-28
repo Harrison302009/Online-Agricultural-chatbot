@@ -100,6 +100,7 @@ export default function Container() {
                     data: { url: "/chat" },
                     vibrate: [200, 100, 100],
                     badge: "/Samp.png",
+                    image: "/ai-mail.png",
                     timestamp: new Date().getTime(),
                     requireInteraction: true,
                     actions: [
