@@ -277,6 +277,24 @@ export default function Home() {
             </Stack>
           </Card>
         </Dialog>
+        <Stack
+          sx={{
+            display: "flex",
+            position: "absolute",
+            top: 4,
+            right: 5,
+            flexDirection: "row",
+            gap: 1,
+            zIndex: 5,
+          }}
+        >
+          <Button variant="outlined" color="primary" href="/auth/login">
+            Login
+          </Button>
+          <Button variant="outlined" color="warning" href="/auth/register">
+            Create an account
+          </Button>
+        </Stack>
         <Typography
           variant="h1"
           id="aiculture"

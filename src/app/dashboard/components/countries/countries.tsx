@@ -6,6 +6,8 @@ export const data = [
     currency: "AFN",
     symbol: "؋",
     rate: 68.4,
+    mobileCode: 93,
+    countryCode: "AFG",
   },
   {
     country: "Algeria",
@@ -14,6 +16,8 @@ export const data = [
     currency: "DZD",
     symbol: "دج",
     rate: 132.09,
+    mobileCode: 213,
+    countryCode: "ALG",
   },
   {
     country: "Angola",
@@ -22,6 +26,8 @@ export const data = [
     currency: "AOA",
     symbol: "Kz",
     rate: 951.47,
+    mobileCode: 631,
+    countryCode: "ANG",
   },
   {
     country: "Argentina",
@@ -30,6 +36,8 @@ export const data = [
     currency: "ARS",
     symbol: "$",
     rate: 969.5,
+    mobileCode: 54,
+    countryCode: "ARG",
   },
   {
     country: "Australia",
@@ -38,6 +46,8 @@ export const data = [
     currency: "AUD",
     symbol: "$",
     rate: 1.45,
+    mobileCode: 61,
+    countryCode: "AUL",
   },
   {
     country: "Austria",
@@ -46,6 +56,8 @@ export const data = [
     currency: "EUR",
     symbol: "€",
     rate: 0.91,
+    mobileCode: 43,
+    countryCode: "AUS",
   },
   {
     country: "Belgium",
@@ -54,6 +66,8 @@ export const data = [
     currency: "EUR",
     symbol: "€",
     rate: 0.91,
+    mobileCode: 32,
+    countryCode: "BEL",
   },
   {
     country: "Benin",
@@ -62,6 +76,8 @@ export const data = [
     currency: "XOF",
     symbol: "Fr",
     rate: 591,
+    mobileCode: 229,
+    countryCode: "BEN",
   },
   {
     country: "Brazil",
@@ -70,6 +86,8 @@ export const data = [
     currency: "BRL",
     symbol: "R$",
     rate: 5.46,
+    mobileCode: 55,
+    countryCode: "BRA",
   },
   {
     country: "Cameroon",
@@ -78,6 +96,8 @@ export const data = [
     currency: "XAF",
     symbol: "Fr",
     rate: 598.5,
+    mobileCode: 237,
+    countryCode: "CMR",
   },
   {
     country: "Canada",
@@ -86,6 +106,8 @@ export const data = [
     currency: "CAD",
     symbol: "$",
     rate: 1.36,
+    mobileCode: 1,
+    countryCode: "CAN",
   },
   {
     country: "China",
@@ -94,6 +116,8 @@ export const data = [
     currency: "CNY",
     symbol: "¥",
     rate: 7.02,
+    mobileCode: 86,
+    countryCode: "CPR",
   },
   {
     country: "Colombia",
@@ -102,14 +126,8 @@ export const data = [
     currency: "COP",
     symbol: "$",
     rate: 4165.64,
-  },
-  {
-    country: "Dubai",
-    percentage: 20,
-    content: "Increase in oaten import",
-    currency: "AED",
-    symbol: "د.إ",
-    rate: 3.67,
+    mobileCode: 57,
+    countryCode: "COL",
   },
   {
     country: "Egypt",
@@ -118,6 +136,8 @@ export const data = [
     currency: "EGP",
     symbol: "ج.م",
     rate: 48.29,
+    mobileCode: 20,
+    countryCode: "EGY",
   },
   {
     country: "France",
@@ -126,6 +146,8 @@ export const data = [
     currency: "EUR",
     symbol: "€",
     rate: 0.91,
+    mobileCode: 33,
+    countryCode: "FRA",
   },
   {
     country: "Germany",
@@ -134,6 +156,8 @@ export const data = [
     currency: "EUR",
     symbol: "€",
     rate: 0.91,
+    mobileCode: 49,
+    countryCode: "GER",
   },
   {
     country: "Ghana",
@@ -142,6 +166,8 @@ export const data = [
     currency: "GHS",
     symbol: "₵",
     rate: 15.85,
+    mobileCode: 233,
+    countryCode: "GHA",
   },
   {
     country: "Hungary",
@@ -150,6 +176,8 @@ export const data = [
     currency: "HUF",
     symbol: "Ft",
     rate: 366.17,
+    mobileCode: 36,
+    countryCode: "HUN",
   },
   {
     country: "India",
@@ -158,6 +186,8 @@ export const data = [
     currency: "INR",
     symbol: "₹",
     rate: 15480,
+    mobileCode: 91,
+    countryCode: "IND",
   },
   {
     country: "Indonesia",
@@ -166,6 +196,8 @@ export const data = [
     currency: "IDR",
     symbol: "Rp",
     rate: 83.92,
+    mobileCode: 62,
+    countryCode: "INS",
   },
   {
     country: "Iran",
@@ -174,6 +206,8 @@ export const data = [
     currency: "IRR",
     symbol: "﷼",
     rate: 42000,
+    mobileCode: 98,
+    countryCode: "IRA",
   },
   {
     country: "Iraq",
@@ -182,6 +216,8 @@ export const data = [
     currency: "IQD",
     symbol: "ع.د",
     rate: 1309,
+    mobileCode: 964,
+    countryCode: "IRQ",
   },
   {
     country: "Israel",
@@ -190,6 +226,8 @@ export const data = [
     currency: "ILS",
     symbol: "₪",
     rate: 3.81,
+    mobileCode: 972,
+    countryCode: "ISR",
   },
   {
     country: "Italy",
@@ -198,6 +236,8 @@ export const data = [
     currency: "EUR",
     symbol: "€",
     rate: 0.91,
+    mobileCode: 39,
+    countryCode: "ITA",
   },
   {
     country: "Japan",
@@ -206,6 +246,8 @@ export const data = [
     currency: "JPY",
     symbol: "¥",
     rate: 148.71,
+    mobileCode: 81,
+    countryCode: "JPN",
   },
   {
     country: "Kenya",
@@ -214,6 +256,8 @@ export const data = [
     currency: "KES",
     symbol: "Sh",
     rate: 128.5,
+    mobileCode: 254,
+    countryCode: "KEN",
   },
   {
     country: "Madagascar",
@@ -222,6 +266,8 @@ export const data = [
     currency: "MGA",
     symbol: "Ar",
     rate: 4556.46,
+    mobileCode: 261,
+    countryCode: "MAG",
   },
   {
     country: "Malaysia",
@@ -230,6 +276,8 @@ export const data = [
     currency: "MYR",
     symbol: "RM",
     rate: 4.21,
+    mobileCode: 60,
+    countryCode: "MAL",
   },
   {
     country: "Mexico",
@@ -238,6 +286,8 @@ export const data = [
     currency: "MXN",
     symbol: "$",
     rate: 19.15,
+    mobileCode: 52,
+    countryCode: "MEX",
   },
   {
     country: "Netherlands",
@@ -246,6 +296,8 @@ export const data = [
     currency: "EUR",
     symbol: "€",
     rate: 0.91,
+    mobileCode: 31,
+    countryCode: "NET",
   },
   {
     country: "New Zealand",
@@ -254,6 +306,8 @@ export const data = [
     currency: "NZD",
     symbol: "$",
     rate: 1.62,
+    mobileCode: 64,
+    countryCode: "NZE",
   },
   {
     country: "Niger",
@@ -262,6 +316,8 @@ export const data = [
     currency: "XOF",
     symbol: "Fr",
     rate: 591,
+    mobileCode: 227,
+    countryCode: "NER",
   },
   {
     country: "Nigeria",
@@ -270,6 +326,8 @@ export const data = [
     currency: "NGN",
     symbol: "₦",
     rate: 1600,
+    mobileCode: 234,
+    countryCode: "NIR",
   },
   {
     country: "Portugal",
@@ -278,6 +336,8 @@ export const data = [
     currency: "EUR",
     symbol: "€",
     rate: 0.91,
+    mobileCode: 351,
+    countryCode: "POR",
   },
   {
     country: "Qatar",
@@ -286,6 +346,8 @@ export const data = [
     currency: "QAR",
     symbol: "ر.ق",
     rate: 3.64,
+    mobileCode: 974,
+    countryCode: "QAT",
   },
   {
     country: "Russia",
@@ -294,6 +356,8 @@ export const data = [
     currency: "RUB",
     symbol: "₽",
     rate: 95.25,
+    mobileCode: 7,
+    countryCode: "RUS",
   },
   {
     country: "Saudi Arabia",
@@ -302,6 +366,8 @@ export const data = [
     currency: "SAR",
     symbol: "ر.س",
     rate: 3.76,
+    mobileCode: 966,
+    countryCode: "SAU",
   },
   {
     country: "Singapore",
@@ -310,6 +376,8 @@ export const data = [
     currency: "SGD",
     symbol: "$",
     rate: 1.31,
+    mobileCode: 65,
+    countryCode: "SIN",
   },
   {
     country: "South Africa",
@@ -318,6 +386,8 @@ export const data = [
     currency: "ZAR",
     symbol: "R",
     rate: 17.48,
+    mobileCode: 27,
+    countryCode: "SAF",
   },
   {
     country: "Spain",
@@ -326,6 +396,8 @@ export const data = [
     currency: "EUR",
     symbol: "€",
     rate: 0.91,
+    mobileCode: 34,
+    countryCode: "SPA",
   },
   {
     country: "Thailand",
@@ -334,6 +406,8 @@ export const data = [
     currency: "THB",
     symbol: "฿",
     rate: 33.27,
+    mobileCode: 66,
+    countryCode: "THA",
   },
   {
     country: "Togo",
@@ -342,6 +416,8 @@ export const data = [
     currency: "TGO",
     symbol: "Fr",
     rate: 591,
+    mobileCode: 228,
+    countryCode: "TOG",
   },
   {
     country: "Turkey",
@@ -350,6 +426,8 @@ export const data = [
     currency: "TRY",
     symbol: "₺",
     rate: 34.24,
+    mobileCode: 90,
+    countryCode: "TUR",
   },
   {
     country: "Ukraine",
@@ -358,6 +436,8 @@ export const data = [
     currency: "UAH",
     symbol: "₴",
     rate: 41.12,
+    mobileCode: 380,
+    countryCode: "UKR",
   },
   {
     country: "United Arab Emirates",
@@ -366,6 +446,8 @@ export const data = [
     currency: "AED",
     symbol: "د.إ",
     rate: 3.67,
+    mobileCode: 971,
+    countryCode: "UAE",
   },
   {
     country: "United Kingdom",
@@ -374,6 +456,8 @@ export const data = [
     currency: "GBP",
     symbol: "£",
     rate: 0.76,
+    mobileCode: 44,
+    countryCode: "UKM",
   },
   {
     country: "United States",
@@ -384,6 +468,8 @@ export const data = [
     basicPrice: 162,
     premiumPrice: 3642,
     rate: 1,
+    mobileCode: 1,
+    countryCode: "USA",
   },
 ];
 
