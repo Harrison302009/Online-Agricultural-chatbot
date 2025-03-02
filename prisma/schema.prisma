@@ -49,6 +49,8 @@ model User {
     isBanned        Boolean       @default(false)
     plan            String        @default("new")
     receivedMessage Boolean       @default(false)
+    hasPendingApplications Boolean @default(false)
+    ApplicationStatus String?
     emailVerified   DateTime?
     image           String?
     accounts        Account[]
@@ -56,6 +58,7 @@ model User {
     Message         Message[]
     ChatMessage     ChatMessage[]
     MessageSent     MessageSent[]
+    Exam            Exam[]
 }
 
 model VerificationToken {
@@ -98,4 +101,22 @@ model MessageSent {
 model RegisteredUsers {
     email    String  @id @unique @default("test@example.com")
     password String?
+}
+
+model Exam {
+    examId               String   @id @default(cuid())
+    userId               String?
+    user                 User?    @relation(fields: [userId], references: [id])
+    Answer1              String?
+    Certificate          String?
+    Answer2              String?
+    Answer3              String?
+    Answer4              String?
+    Answer5              String?
+    Answer6              String?
+    Answer7              String?
+    Answer8              String?
+    Answer9              String?
+    Answer10             String?
+    score                Float?
 }

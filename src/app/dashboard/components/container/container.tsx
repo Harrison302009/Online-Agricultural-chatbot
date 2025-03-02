@@ -388,7 +388,6 @@ export default function Container() {
       setCountryLoaded(true);
     }
   }, [location]);
-
   useEffect(() => {
     const fetchUserCountry = async (latitude: number, longitude: number) => {
       if (navigator.geolocation) {

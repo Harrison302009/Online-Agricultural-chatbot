@@ -13,11 +13,20 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Backdrop,
 } from "@mui/material";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import "../globalicons.css";
+import { CldImage } from "next-cloudinary";
+import {
+  Avatar,
+  CssVarsProvider,
+  CircularProgress,
+  Modal,
+  ModalDialog,
+} from "@mui/joy";
 
 export type User = {
   id: number;
@@ -28,16 +37,61 @@ export type User = {
   address: string;
   country?: string;
   plan: string;
+  hasPendingApplications: boolean;
+  ApplicationStatus?: string;
   lastLogin: string;
 };
 
+type Applications = {
+  userId: string;
+  examId: string;
+  Answer1: string;
+  Answer2: string;
+  Answer3: string;
+  Answer4: string;
+  Answer5: string;
+  Answer6: string;
+  Answer7: string;
+  Answer8: string;
+  Answer9: string;
+  Answer10: string;
+  user: string;
+};
 export default function AdminPage() {
   const [adminDisplay, setAdminDisplay] = useState(false);
+  const [Applications, setApplications] = useState<Applications[]>([]);
+  const [appFetched, setAppFetched] = useState(false);
   const [defaultDisplay, setDefaultDisplay] = useState(true);
+  const [userApp, setUserApp] = useState({
+    userId: "",
+    examId: "",
+    Answer1: "",
+    Answer2: "",
+    Answer3: "",
+    Answer4: "",
+    Answer5: "",
+    Answer6: "",
+    Answer7: "",
+    Answer8: "",
+    Answer9: "",
+    Answer10: "",
+    user: "",
+  });
   const [users, setUsers] = useState<User[]>([]);
   const [id, setId] = useState(0);
   const session = useSession();
   const router = useRouter();
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const res = await fetch("/api/admin/users");
+      const data: User[] = await res.json();
+      setUsers(data);
+    };
+    const fetchInterval = setInterval(() => {
+      fetchUsers();
+    }, 1500);
+    return () => clearInterval(fetchInterval);
+  }, [session.status]);
   const handleBan = async (userId: number) => {
     const response = await fetch("/api/admin/users/ban-user", {
       method: "POST",
@@ -55,6 +109,23 @@ export default function AdminPage() {
       );
     } else {
       alert("Failed to ban user");
+    }
+  };
+  const ApplicationFetcher = async (userId: number) => {
+    const APIContact = await fetch("/api/survey", {
+      method: "GET",
+    });
+    if (APIContact.ok) {
+      const data: Applications[] = await APIContact.json();
+      setApplications(data);
+      if (data || Applications) {
+        const userApplication = data.find((app) => app.userId === `${userId}`);
+        if (userApplication) {
+          setUserApp(userApplication);
+          setAppFetched(true);
+        } else {
+        }
+      }
     }
   };
   const handleKick = async (userId: number) => {
@@ -115,14 +186,6 @@ export default function AdminPage() {
     fontWeight: 400,
     fontStyle: "normal",
   };
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const res = await fetch("/api/admin/users");
-      const data: User[] = await res.json();
-      setUsers(data);
-    };
-    fetchUsers();
-  }, []);
   const verifyAdmin = () => {
     if (session.data?.user.role !== "admin") {
       setDefaultDisplay(false);
@@ -168,6 +231,84 @@ export default function AdminPage() {
           <Typography variant="h3">Hi {session.data?.user.role}</Typography>
           <br />
           <Typography>Users</Typography>
+          <Backdrop
+            open={appFetched}
+            sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+            onClick={() => setAppFetched(false)}
+          >
+            <Stack
+              sx={{
+                display: "flex",
+                position: "relative",
+                flexDirection: "column",
+                backgroundColor: "rgba(255, 255, 255, 0.73)",
+                color: "rgba(231, 0, 0, 0.76)",
+                borderRadius: 10,
+                width: "80%",
+                height: "80%",
+                overflowY: "auto",
+              }}
+            >
+              <Typography variant="h4">Application</Typography>
+              <br />
+              <Typography variant="h5">
+                1. What specific areas of agricultural research have you focused
+                on in your career?
+              </Typography>
+              <Typography variant="h6">Answer: {userApp.Answer1}</Typography>
+              <br />
+              <Typography variant="h5">
+                2. Please select a preferred area of expertise:
+              </Typography>
+              <Typography variant="h6">Answer: {userApp.Answer2}</Typography>
+              <br />
+              <Typography variant="h5">
+                3. How many months/years of experience do you have?
+              </Typography>
+              <Typography variant="h6">Answer: {userApp.Answer3}</Typography>
+              <br />
+              <Typography variant="h5">
+                4. What is your highest level of education?
+              </Typography>
+              <Typography variant="h6">Answer: {userApp.Answer4}</Typography>
+              <br />
+              <Typography variant="h5">
+                5. Can you detail any significant projects you&apos;ve worked on
+                in the field of agriculture?
+              </Typography>
+              <Typography variant="h6">Answer: {userApp.Answer5}</Typography>
+              <br />
+              <Typography variant="h5">
+                6. What research methods and techniques are you most proficient
+                in?
+              </Typography>
+              <Typography variant="h6">Answer: {userApp.Answer6}</Typography>
+              <br />
+              <Typography variant="h5">
+                7. How do you stay updated with the latest developments and
+                trends in agriculture?
+              </Typography>
+              <Typography variant="h6">Answer: {userApp.Answer7}</Typography>
+              <br />
+              <Typography variant="h5">
+                8. What strengths do you believe you bring to this position, and
+                how do they align with our organization&apos;s goals?
+              </Typography>
+              <Typography variant="h6">Answer: {userApp.Answer8}</Typography>
+              <br />
+              <Typography variant="h5">
+                9. How do you see your research contributing to advancements in
+                agriculture?
+              </Typography>
+              <Typography variant="h6">Answer: {userApp.Answer9}</Typography>
+              <br />
+              <Typography variant="h5">
+                10. How do you approach collaboration with other researchers and
+                professionals in the field?
+              </Typography>
+              <Typography variant="h6">Answer: {userApp.Answer10}</Typography>
+            </Stack>
+          </Backdrop>
           <IconButton
             sx={{
               display: "flex",
@@ -251,6 +392,20 @@ export default function AdminPage() {
                       }
                     >
                       {user.isBanned ? "Unban" : "Ban"}
+                    </Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      sx={{
+                        display:
+                          user.hasPendingApplications === true &&
+                          user.ApplicationStatus === "PENDING"
+                            ? "flex"
+                            : "none",
+                      }}
+                      onClick={() => ApplicationFetcher(user.id)}
+                    >
+                      View Application
                     </Button>
                   </TableCell>
                 </TableRow>

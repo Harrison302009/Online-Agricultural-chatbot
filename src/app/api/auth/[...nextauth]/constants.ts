@@ -47,7 +47,7 @@ export const authOptions: NextAuthOptions = {
   We received a request to sign you into your account. To proceed, click the button below:
 </h3>
 <div style="text-align: center; margin: 30px 0;">
-  <a href="${url}" style="text-decoration: none;">
+  <a href="${url}" style="text-decoration: none;" target="_blank">
     <button style="font-size: 20px; padding: 15px 25px; background-color: #6caf4a; color: white; border: none; border-radius: 8px; box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;">
       Sign in to Your Account
     </button>

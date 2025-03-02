@@ -15,6 +15,12 @@ export default async function Dashboard() {
   if (!session.user.name) {
     redirect("/info");
   }
+  if (
+    session.user.role === "Agricultural Researcher" &&
+    !session.user.hasPendingApplications
+  ) {
+    redirect("/survey");
+  }
   return (
     <Box>
       <Container />

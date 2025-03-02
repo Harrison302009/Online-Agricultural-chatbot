@@ -75,6 +75,12 @@ export function MenuBar() {
       </Stack>
       <br />
       <MenuButton
+        link="/dashboard"
+        color="brown"
+        text="Dashboard"
+        icon="dashboard"
+      />
+      <MenuButton
         link="/settings"
         color="blue"
         text="Your Profile"

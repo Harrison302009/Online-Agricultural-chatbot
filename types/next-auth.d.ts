@@ -14,6 +14,10 @@ declare module "next-auth" {
       image: string;
       /** If the user has messages he/she has not received but not read */
       receivedMessage: boolean;
+      /**The satus of the user's application */
+      ApplicationStatus?: string;
+      /**Whether or not the user has ever submitted an application */
+      hasPendingApplications: boolean;
       /** The user's status (either true or false) */
       isBanned: boolean;
       /**Whether the user is online or offline (offline by default) */

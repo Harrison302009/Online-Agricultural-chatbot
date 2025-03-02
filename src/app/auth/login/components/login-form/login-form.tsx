@@ -2,11 +2,14 @@
 import { Box, Stack } from "@mui/material";
 import Button from "@mui/joy/Button";
 import "../../../../globalicons.css";
-import { Checkbox, Input, Typography } from "@mui/joy";
+import { Checkbox, Input, Link, Snackbar, Typography } from "@mui/joy";
 import { CssVarsProvider } from "@mui/joy/styles";
 import { extendTheme } from "@mui/joy/styles";
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import { WarningAmberOutlined } from "@mui/icons-material";
 
 type RegisteredUsers = {
   email: string;
@@ -19,6 +22,8 @@ export function LoginForm() {
   const [color, setColor] = useState("primary");
   const [register, setRegister] = useState<RegisteredUsers[]>([]);
   const [loading, setLoading] = useState(false);
+  const [danger, setDanger] = useState(false);
+  const [warning, setWarning] = useState(false);
   const [checked, setChecked] = useState(false);
   const session = useSession();
   useEffect(() => {
@@ -43,12 +48,18 @@ export function LoginForm() {
           setLoading(false);
           signIn("email", { email });
         } else {
-          alert("Wrong email or password");
           setLoading(false);
+          setDanger(true);
+          setTimeout(() => {
+            setDanger(false);
+          }, 3000);
         }
       } else {
-        alert("Email not registered");
         setLoading(false);
+        setDanger(true);
+        setTimeout(() => {
+          setDanger(false);
+        }, 3000);
       }
     }
   };
@@ -93,6 +104,24 @@ export function LoginForm() {
             width: "100%",
           }}
         >
+          <Snackbar
+            open={danger}
+            size="lg"
+            variant="soft"
+            color="danger"
+            startDecorator={<FontAwesomeIcon icon={faTimesCircle} />}
+          >
+            Email not registered
+          </Snackbar>
+          <Snackbar
+            open={warning}
+            size="lg"
+            variant="soft"
+            color="danger"
+            startDecorator={<WarningAmberOutlined />}
+          >
+            Wrong email or password
+          </Snackbar>
           <Stack
             sx={{
               display: "flex",
@@ -201,6 +230,11 @@ export function LoginForm() {
               >
                 Login
               </Button>
+              <br />
+              <Typography level="body-md">
+                Don&apos;t have an account?{" "}
+                <Link href="/auth/register">Sign up</Link>
+              </Typography>
             </form>
           </Stack>
         </Stack>
