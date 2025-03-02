@@ -10,8 +10,6 @@ import {
   CardMedia,
   Dialog,
   Drawer,
-  ListItem,
-  ListItemButton,
   Skeleton,
   Stack,
   Typography,
@@ -31,7 +29,26 @@ import TabletDisplay from "../../components/tablet-display/tablet-display";
 import { CldImage } from "next-cloudinary";
 import mixpanel from "mixpanel-browser";
 import MixpanelComponent from "@/components/Mixpanel/Mixpanel";
+import {
+  CssVarsProvider,
+  Modal,
+  ModalClose,
+  ModalDialog,
+  Tab,
+  TabList,
+  TabPanel,
+  Table,
+  Tabs,
+} from "@mui/joy";
+import { UpdateStatus } from "@/modules/status/actions";
 
+type User = {
+  id: string;
+  email: string;
+  name: string;
+  country: string;
+  image: string;
+};
 export default function Container() {
   usePusher();
   const [loaded, setLoaded] = useState(false);
@@ -43,7 +60,6 @@ export default function Container() {
   const [weatherIcon, setWeatherIcon] = useState("");
   const [weatherMessage, setWeatherMessage] = useState("");
   const [subject, setSubject] = useState("");
-  const [admin, setAdmin] = useState(false);
   const [percentage, setPercentage] = useState("");
   const [user, setUser] = useState(0);
   const [content, setContent] = useState("");
@@ -53,10 +69,13 @@ export default function Container() {
     state: null,
     country: null,
   });
+  const [userDisplay, setUserDisplay] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [countryLoaded, setCountryLoaded] = useState(false);
   const [weatherLoaded, setWeatherLoaded] = useState(false);
-  const [userStreet, setUserStreet] = useState();
+  const [users, setUsers] = useState<User[]>([]);
+  const [usersAvailable, setUsersAvailable] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
   const [userState, setUserState] = useState();
   const session = useSession();
   const router = useRouter();
@@ -68,6 +87,27 @@ export default function Container() {
   const incrementSpeed = 50;
   const perspeed = 50;
   const step = 1;
+  const GetUsers = async () => {
+    const APIContact = await fetch("/api/user/fetch-users", {
+      method: "GET",
+    });
+    if (APIContact.ok) {
+      const data: User[] = await APIContact.json();
+      setUsers(data);
+    }
+  };
+  const GetOnlineUsers = async () => {
+    const APIContact = await fetch("/api/user/fetch-online-users", {
+      method: "GET",
+    });
+    if (APIContact.ok) {
+      const data: User[] = await APIContact.json();
+      setOnlineUsers(data);
+      if (data.length > 0) {
+        setUsersAvailable(true);
+      }
+    }
+  };
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
@@ -101,7 +141,30 @@ export default function Container() {
     } else {
       setImageLoaded(false);
     }
+    GetUsers();
+    const OnlineInterval = setInterval(() => {
+      GetOnlineUsers();
+    }, 2000);
+    return () => clearInterval(OnlineInterval);
   }, [session.data?.user.image]);
+  useEffect(() => {
+    window.addEventListener("focus", () => {
+      UpdateStatus("online");
+    });
+    return () =>
+      window.removeEventListener("focus", () => {
+        UpdateStatus("online");
+      });
+  }, []);
+  useEffect(() => {
+    window.addEventListener("blur", () => {
+      UpdateStatus("offline");
+    });
+    return () =>
+      window.removeEventListener("blur", () => {
+        UpdateStatus("offline");
+      });
+  }, []);
   useEffect(() => {
     if (percentage) {
       const interval = setInterval(() => {
@@ -410,6 +473,104 @@ export default function Container() {
     <Box>
       <MobileDisplay />
       <TabletDisplay />
+      <CssVarsProvider>
+        <Modal open={userDisplay} onClose={() => setUserDisplay(false)}>
+          <ModalDialog sx={{ overflowY: "auto" }}>
+            <ModalClose />
+            <Typography variant="h4">Users</Typography>
+            <Tabs defaultValue={0}>
+              <TabList>
+                <Tab>All</Tab>
+                <Tab>Online</Tab>
+              </TabList>
+              <TabPanel value={0}>
+                <Table stripe="even" sx={{ minWidth: 700 }}>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Country</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map((user) => (
+                      <tr key={user.id}>
+                        <td width={150}>
+                          <CssVarsProvider>
+                            <CldImage
+                              style={{ borderRadius: 50, cursor: "pointer" }}
+                              onClick={() =>
+                                (window.location.href = `/users/${user.id}`)
+                              }
+                              draggable="false"
+                              alt="pfp"
+                              src={
+                                user.image ||
+                                "aiculture/profile-pictures/Designer_efr3yq"
+                              }
+                              width={45}
+                              height={45}
+                            />
+                          </CssVarsProvider>
+                        </td>
+                        <td width={300}>
+                          {user.name || user.email.split("@")[0]}
+                        </td>
+                        <td width={400}>{user.email}</td>
+                        <td width={150}>{user.country}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </TabPanel>
+              <TabPanel value={1}>
+                <Table stripe="even" sx={{ minWidth: 700 }}>
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Country</th>
+                    </tr>
+                  </thead>
+                  {usersAvailable ? (
+                    <tbody>
+                      {onlineUsers.map((user) => (
+                        <tr key={user.id}>
+                          <td width={150}>
+                            <CssVarsProvider>
+                              <CldImage
+                                style={{ borderRadius: 50 }}
+                                alt="pfp"
+                                src={
+                                  user.image ||
+                                  "aiculture/profile-pictures/pfp_eumgzq"
+                                }
+                                width={45}
+                                height={45}
+                              />
+                            </CssVarsProvider>
+                          </td>
+                          <td width={300}>
+                            {user.name || user.email.split("@")[0]}
+                          </td>
+                          <td width={400}>{user.email}</td>
+                          <td width={150}>{user.country}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  ) : (
+                    <Typography variant="h5">
+                      No online users available.
+                    </Typography>
+                  )}
+                </Table>
+              </TabPanel>
+            </Tabs>
+          </ModalDialog>
+        </Modal>
+      </CssVarsProvider>
       <Stack
         sx={{
           display: {
@@ -639,6 +800,8 @@ export default function Container() {
             icon={"grid_view"}
             subject={`${count}+`}
             content="Users have connected"
+            cursorformation="pointer"
+            handle={() => setUserDisplay(true)}
           ></GlobalCard>
           <GlobalCard
             icon={"commit"}

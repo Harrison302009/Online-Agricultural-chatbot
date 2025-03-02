@@ -45,6 +45,7 @@ model User {
     country         String        @default("Unknown")
     address         String        @default("Unknown")
     role            String        @default("user")
+    status          String        @default("offline")
     isBanned        Boolean       @default(false)
     plan            String        @default("new")
     receivedMessage Boolean       @default(false)

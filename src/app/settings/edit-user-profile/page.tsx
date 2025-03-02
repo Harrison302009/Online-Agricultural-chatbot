@@ -192,6 +192,7 @@ export default function EditUserProfile() {
                   id="email"
                   fullWidth
                   aria-readonly
+                  disabled
                   onMouseOver={(l) => {
                     var fname = document.getElementById(
                       "email",
@@ -210,6 +211,7 @@ export default function EditUserProfile() {
                   id="address"
                   fullWidth
                   aria-readonly
+                  disabled
                   onMouseOver={(l) => {
                     var fname = document.getElementById(
                       "address",
@@ -222,6 +224,25 @@ export default function EditUserProfile() {
                   }}
                   onMouseOut={TextBack}
                   value={session.data?.user.address}
+                />
+                <br />
+                <TextField
+                  id="phone"
+                  fullWidth
+                  aria-readonly
+                  disabled
+                  onMouseOver={(l) => {
+                    var fname = document.getElementById(
+                      "phone",
+                    ) as HTMLInputElement;
+                    var cursor = document.getElementById(
+                      "mouse",
+                    ) as HTMLImageElement;
+                    cursor.srcset = "/text-cursor.png";
+                    fname.style.cursor = "none";
+                  }}
+                  onMouseOut={TextBack}
+                  value={session.data?.user.phoneNumber}
                 />
                 <Button
                   variant="outlined"

@@ -38,12 +38,6 @@ export default function AdminPage() {
   const [id, setId] = useState(0);
   const session = useSession();
   const router = useRouter();
-  const checkRole = async () => {
-    const request = await fetch("/api/admin", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    });
-  };
   const handleBan = async (userId: number) => {
     const response = await fetch("/api/admin/users/ban-user", {
       method: "POST",
@@ -129,11 +123,6 @@ export default function AdminPage() {
     };
     fetchUsers();
   }, []);
-  useEffect(() => {
-    if (session.status === "authenticated") {
-      checkRole();
-    }
-  }, [session.status]);
   const verifyAdmin = () => {
     if (session.data?.user.role !== "admin") {
       setDefaultDisplay(false);

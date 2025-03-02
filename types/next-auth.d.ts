@@ -16,6 +16,8 @@ declare module "next-auth" {
       receivedMessage: boolean;
       /** The user's status (either true or false) */
       isBanned: boolean;
+      /**Whether the user is online or offline (offline by default) */
+      status: string;
       /** The user's plan (free, premium, etc.) */
       plan: string;
       /** The last time the user logged in */

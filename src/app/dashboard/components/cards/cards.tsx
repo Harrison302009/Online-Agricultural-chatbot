@@ -16,10 +16,14 @@ export function GlobalCard({
   icon,
   subject,
   content,
+  handle,
+  cursorformation,
 }: {
   icon: string;
   subject: string;
   content: string;
+  handle?: () => void;
+  cursorformation?: string;
 }) {
   const [loaded, setLoaded] = useState(false);
   return (
@@ -34,6 +38,7 @@ export function GlobalCard({
       ></Image>
       <Paper
         elevation={5}
+        onClick={handle}
         sx={{
           display: {
             xs: "none",
@@ -48,6 +53,7 @@ export function GlobalCard({
           flexDirection: "row",
           width: "25%",
           height: 200,
+          cursor: cursorformation || "auto",
           transition: "0.2s ease-in-out",
           ":hover": {
             bgcolor: "#DEDEDE",

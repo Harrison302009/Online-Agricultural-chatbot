@@ -241,6 +241,16 @@ export default function Settings() {
                 Country: {session.data?.user.country}
               </Typography>
               <br />
+              <Typography
+                variant="h5"
+                className="userComponents"
+                id="userPhone"
+                onMouseOver={TextOut}
+                onMouseOut={TextBack}
+              >
+                Phone No.: {session.data?.user.phoneNumber}
+              </Typography>
+              <br />
               <Button
                 variant="outlined"
                 id="editProfile"
