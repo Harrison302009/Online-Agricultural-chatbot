@@ -456,7 +456,7 @@ export default function SurveyContainer() {
                   }}
                   style={{ display: certificateUploaded ? "flex" : "none" }}
                   alt="Pfp"
-                  src={"sanpolio"}
+                  src={values.certificate || ""}
                   width={100}
                   height={100}
                 />
@@ -466,12 +466,13 @@ export default function SurveyContainer() {
                       process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME
                     }
                     className="certificateupload"
-                    onSuccessAction={(result) =>
+                    onSuccessAction={(result) => {
                       setValues({
                         ...values,
                         certificate: (result.info as any).public_id,
-                      })
-                    }
+                      });
+                      setCertificateUploaded(true);
+                    }}
                     options={{
                       cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
                       cropping: true,
