@@ -1,7 +1,6 @@
 "use client";
 import {
   Avatar,
-  Backdrop,
   Box,
   Button,
   Card,
@@ -20,15 +19,12 @@ import Image from "next/image";
 import { GlobalCard } from "../../components/cards/cards";
 import { redirect, useRouter } from "next/navigation";
 import { data } from "../../components/countries/countries";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { MenuBar } from "@/components/menubar/menubar";
 import MobileDisplay from "../../components/mobile-display/mobile-display";
 import usePusher from "@/modules/hooks/pusher/pusher";
 import TabletDisplay from "../../components/tablet-display/tablet-display";
 import { CldImage } from "next-cloudinary";
 import mixpanel from "mixpanel-browser";
-import MixpanelComponent from "@/components/Mixpanel/Mixpanel";
 import {
   CssVarsProvider,
   Modal,
@@ -41,6 +37,7 @@ import {
   Tabs,
 } from "@mui/joy";
 import { UpdateStatus } from "@/modules/status/actions";
+import LoadingSequence from "@/components/loading/sequence";
 
 type User = {
   id: string;
@@ -472,6 +469,7 @@ export default function Container() {
     <Box>
       <MobileDisplay />
       <TabletDisplay />
+      <LoadingSequence />
       <CssVarsProvider>
         <Modal open={userDisplay} onClose={() => setUserDisplay(false)}>
           <ModalDialog sx={{ overflowY: "auto" }}>

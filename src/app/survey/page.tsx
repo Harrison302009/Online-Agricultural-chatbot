@@ -10,5 +10,16 @@ export default async function Survey() {
   if (session.user.isBanned) {
     redirect("/banned");
   }
+  if (session.user.role !== "Agricultural Researcher" || "admin") {
+    redirect("/dashboard");
+  }
+  if (
+    (session.user.role === "Agricultural Researcher" &&
+      session.user.ApplicationStatus === "PENDING") ||
+    "DECLINED" ||
+    "APPROVED"
+  ) {
+    redirect("/dashboard");
+  }
   return <SurveyContainer />;
 }

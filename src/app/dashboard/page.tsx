@@ -3,6 +3,8 @@ import Container from "./components/container/container";
 import { getServerSession } from "@/modules/auth/lib/get-server-session/get-server-session";
 import { redirect } from "next/navigation";
 import mixpanel from "mixpanel-browser";
+import { useSession } from "next-auth/react";
+import LoadingSequence from "@/components/loading/sequence";
 
 export default async function Dashboard() {
   const session = await getServerSession();

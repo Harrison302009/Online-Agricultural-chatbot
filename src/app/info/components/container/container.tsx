@@ -4,21 +4,28 @@ import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CheckCircleOutline, WarningAmberRounded } from "@mui/icons-material";
 import {
+  Avatar,
   Box,
   Button,
+  CircularProgress,
   CssVarsProvider,
   Input,
+  Modal,
+  ModalDialog,
   Option,
   Select,
   Snackbar,
   Stack,
   Typography,
 } from "@mui/joy";
+import { useSession } from "next-auth/react";
+import { CldImage } from "next-cloudinary";
 import { redirect, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Router } from "react-router-dom";
 
 export default function RegistrationForm() {
+  const session = useSession();
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [warning, setWarning] = useState(false);
@@ -73,6 +80,50 @@ export default function RegistrationForm() {
   ) => {
     setValues({ ...values, countryCode: `${code}` });
   };
+  if (session.status === "loading") {
+    return (
+      <CssVarsProvider>
+        <Modal open>
+          <ModalDialog
+            sx={{
+              display: "flex",
+              position: "relative",
+              alignItems: "center",
+              justifyContent: "center",
+              visibility: "hidden",
+            }}
+          >
+            <Avatar
+              size="lg"
+              variant="soft"
+              color="warning"
+              sx={{ width: 250, height: 250, visibility: "visible" }}
+            >
+              <CldImage
+                alt="logo"
+                src="aiculture/profile-pictures/pfp_eumgzq"
+                width={250}
+                height={250}
+              />
+            </Avatar>
+            <Typography
+              variant="plain"
+              color="success"
+              sx={{ visibility: "visible" }}
+              level="h1"
+            >
+              AICulture
+            </Typography>
+            <CircularProgress
+              variant="soft"
+              color="success"
+              sx={{ visibility: "visible" }}
+            />
+          </ModalDialog>
+        </Modal>
+      </CssVarsProvider>
+    );
+  }
   return (
     <CssVarsProvider>
       <Box

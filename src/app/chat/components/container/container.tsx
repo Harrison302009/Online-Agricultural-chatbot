@@ -19,6 +19,7 @@ import { MenuBar } from "@/components/menubar/menubar";
 import { CldImage } from "next-cloudinary";
 import { registerServiceWorker } from "@/utils/register-service-worker";
 import { DeleteOutline } from "@mui/icons-material";
+import LoadingSequence from "@/components/loading/sequence";
 
 const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
   cluster: "mt1",
@@ -150,6 +151,7 @@ export default function Container() {
 
   return (
     <Box>
+      <LoadingSequence />
       <Stack
         style={{
           backgroundColor: "white",
