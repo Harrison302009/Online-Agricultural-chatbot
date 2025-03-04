@@ -421,7 +421,8 @@ export default function SurveyContainer() {
                 }}
               >
                 <Typography level="title-md">
-                  Please upload your {values.Answer4} certificate
+                  Please upload your {values.Answer4} certificate or any
+                  relevant certificate you hold
                 </Typography>
                 <br />
                 <Stack
@@ -467,10 +468,10 @@ export default function SurveyContainer() {
                     }
                     className="certificateupload"
                     onSuccessAction={(result) => {
-                      setValues({
-                        ...values,
+                      setValues((prevValues) => ({
+                        ...prevValues,
                         certificate: (result.info as any).public_id,
-                      });
+                      }));
                       setCertificateUploaded(true);
                     }}
                     options={{

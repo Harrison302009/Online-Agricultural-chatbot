@@ -15,7 +15,7 @@ export const POST = async (req: NextRequest) => {
     Answer9,
     Answer10,
     experiencelevel,
-    educationalCertificate,
+    certificate,
   } = await req.json();
   const session = await getServerSession();
   if (!session) {
@@ -47,7 +47,7 @@ export const POST = async (req: NextRequest) => {
       Answer8,
       Answer9,
       Answer10,
-      Certificate: educationalCertificate,
+      Certificate: certificate,
     },
   });
   await prisma.user.update({

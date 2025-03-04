@@ -55,6 +55,7 @@ type Applications = {
   Answer8: string;
   Answer9: string;
   Answer10: string;
+  Certificate: string;
   user: string;
 };
 export default function AdminPage() {
@@ -75,6 +76,7 @@ export default function AdminPage() {
     Answer8: "",
     Answer9: "",
     Answer10: "",
+    Certificate: "",
     user: "",
   });
   const [users, setUsers] = useState<User[]>([]);
@@ -230,7 +232,7 @@ export default function AdminPage() {
         <Stack>
           <Typography variant="h3">Hi {session.data?.user.role}</Typography>
           <br />
-          <Typography>Users</Typography>
+          <Typography>Users ({users.length})</Typography>
           <Backdrop
             open={appFetched}
             sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
@@ -241,8 +243,9 @@ export default function AdminPage() {
                 display: "flex",
                 position: "relative",
                 flexDirection: "column",
-                backgroundColor: "rgba(255, 255, 255, 0.73)",
-                color: "rgba(231, 0, 0, 0.76)",
+                backgroundImage:
+                  "linear-gradient(to bottom  right, rgba(163, 238, 144, 0.57), rgba(129, 131, 218, 0.57))",
+                color: "rgba(255, 0, 106, 0.76)",
                 borderRadius: 10,
                 width: "80%",
                 height: "80%",
@@ -271,6 +274,13 @@ export default function AdminPage() {
                 4. What is your highest level of education?
               </Typography>
               <Typography variant="h6">Answer: {userApp.Answer4}</Typography>
+              <Typography variant="h5">Certificate: </Typography>
+              <CldImage
+                src={userApp.Certificate}
+                alt="certificate"
+                height={250}
+                width={300}
+              />
               <br />
               <Typography variant="h5">
                 5. Can you detail any significant projects you&apos;ve worked on
@@ -412,6 +422,7 @@ export default function AdminPage() {
               ))}
             </TableBody>
           </Table>
+          <br />
         </Stack>
       )}
     </Box>
