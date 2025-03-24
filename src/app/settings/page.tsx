@@ -66,6 +66,7 @@ export default function Settings() {
       setImageLoaded(false);
     }
   }, [session.data?.user.image]);
+  console.log(session.data?.user.image);
   return (
     <Box>
       <Stack

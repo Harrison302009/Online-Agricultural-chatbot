@@ -5,10 +5,12 @@ export default function Options({
   image,
   text,
   disabled,
+  handle,
 }: {
   image: string;
   text: string;
   disabled?: boolean;
+  handle?: (u: any) => void;
 }) {
   return (
     <CssVarsProvider>
@@ -23,6 +25,7 @@ export default function Options({
           flexDirection: "column",
         }}
         disabled={disabled}
+        onClick={handle}
       >
         <span className="material-symbols-outlined">{image}</span>
         <Typography variant="plain" level="title-md">

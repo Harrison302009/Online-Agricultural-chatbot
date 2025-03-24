@@ -49,9 +49,9 @@ export function LoginForm() {
           signIn("email", { email });
         } else {
           setLoading(false);
-          setDanger(true);
+          setWarning(true);
           setTimeout(() => {
-            setDanger(false);
+            setWarning(false);
           }, 3000);
         }
       } else {

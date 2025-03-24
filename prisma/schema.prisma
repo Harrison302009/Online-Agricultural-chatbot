@@ -52,7 +52,7 @@ model User {
     hasPendingApplications Boolean       @default(false)
     ApplicationStatus      String?
     emailVerified          DateTime?
-    image                  String?
+    image                  String? @default("inc9foypm6vykbdcdqya")
     accounts               Account[]
     sessions               Session[]
     Message                Message[]
@@ -124,9 +124,8 @@ model Exam {
 
 model Posts {
     id        String    @id @default(cuid())
-    title     String
     avatar String?
-    content   String
+    content   String?
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
     author    User?     @relation(fields: [authorId], references: [id])
