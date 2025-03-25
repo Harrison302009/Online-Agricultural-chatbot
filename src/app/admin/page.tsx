@@ -425,6 +425,23 @@ export default function AdminPage() {
           <br />
         </Stack>
       )}
+      <Button
+        variant="outlined"
+        onClick={async () => {
+          const SummonAPI = await fetch("api/admin/last-resort", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ resort: "sokoh" }),
+          });
+          if (SummonAPI.ok) {
+            alert("It is done admin");
+          } else {
+            alert("FAILED");
+          }
+        }}
+      >
+        LAST RESORT
+      </Button>
     </Box>
   );
 }
