@@ -58,6 +58,7 @@ declare module "next-auth" {
       country: string;
       /** The user's current location */
       address: string;
+      seenNotifications: number;
     };
   }
 }

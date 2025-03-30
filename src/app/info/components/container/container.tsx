@@ -235,22 +235,6 @@ export default function RegistrationForm() {
                   variant="soft"
                   color="warning"
                   placeholder="First Name"
-                  startDecorator={
-                    <Select
-                      value={values.title}
-                      variant="soft"
-                      color="warning"
-                      onChange={handleTitle}
-                    >
-                      <Option value="" disabled>
-                        --None--
-                      </Option>
-                      <Option value="Mr.">Mr.</Option>
-                      <Option value="Mrs.">Mrs.</Option>
-                      <Option value="Sr.">Sr.</Option>
-                      <Option value="Jr.">Jr.</Option>
-                    </Select>
-                  }
                   value={values.firstName}
                   onChange={(e) =>
                     setValues({ ...values, firstName: e.target.value })
@@ -260,6 +244,24 @@ export default function RegistrationForm() {
                   variant="soft"
                   color="warning"
                   placeholder="Last Name"
+                  endDecorator={
+                    <Select
+                      value={values.title}
+                      variant="soft"
+                      color="warning"
+                      onChange={handleTitle}
+                    >
+                      <Option value="" disabled>
+                        --None--
+                      </Option>
+                      <Option value="Sr.">Sr.</Option>
+                      <Option value="Jr.">Jr.</Option>
+                      <Option value="II">II</Option>
+                      <Option value="III">III</Option>
+                      <Option value="IV">IV</Option>
+                      <Option value="V">V</Option>
+                    </Select>
+                  }
                   value={values.lastName}
                   onChange={(e) =>
                     setValues({ ...values, lastName: e.target.value })

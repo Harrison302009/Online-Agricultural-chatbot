@@ -51,8 +51,9 @@ model User {
     receivedMessage        Boolean       @default(false)
     hasPendingApplications Boolean       @default(false)
     ApplicationStatus      String?
+    seenNotifications      Int           @default(0)
     emailVerified          DateTime?
-    image                  String? @default("inc9foypm6vykbdcdqya")
+    image                  String?       @default("inc9foypm6vykbdcdqya")
     accounts               Account[]
     sessions               Session[]
     Message                Message[]
@@ -124,17 +125,17 @@ model Exam {
 
 model Posts {
     id        String    @id @default(cuid())
-    avatar String?
+    avatar    String?
     content   String?
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt
     author    User?     @relation(fields: [authorId], references: [id])
     authorId  String?
     name      String?
-    image1 String?
-    image2 String?
-    image3 String?
-    image4 String?
-    image5 String?
-    video String?
+    image1    String?
+    image2    String?
+    image3    String?
+    image4    String?
+    image5    String?
+    video     String?
 }

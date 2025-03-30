@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Stack, Typography, Drawer, Avatar } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "../../../globalicons.css";
 import { useRouter } from "next/navigation";
 import { useChat } from "ai/react";
@@ -14,7 +14,11 @@ import {
   Button,
   Card,
   CssVarsProvider,
+  Dropdown,
+  IconButton,
   Input,
+  Menu,
+  MenuItem,
   Modal,
   ModalClose,
   ModalDialog,
@@ -27,6 +31,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleExclamation,
   faDeleteLeft,
+  faListDots,
   faTimesCircle,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
@@ -34,8 +39,11 @@ import { CheckCircleOutlineRounded, DonutSmall } from "@mui/icons-material";
 import { User } from "@/app/dashboard/components/container/container";
 import { UpdateStatus } from "@/modules/status/actions";
 import { PostDelete } from "@/modules/posts/actions";
+import { NotifHandler } from "@/modules/notifications/actions";
+import { DeletePost } from "@/modules/posts/delete-post/actions";
 
 type Post = {
+  id: string;
   authorId: string;
   content: string;
   image1: string;
@@ -56,9 +64,12 @@ export default function PostContainer() {
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [online, setOnline] = useState(false);
+  const [executed, setExecuted] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
   const [fetchedPosts, setFetchedPosts] = useState<Post[]>([]);
+  const [postCount, setPostCount] = useState(0);
+  const [newPost, setNewPost] = useState(false);
   const [post, setPost] = useState({
     content: "",
     name: "",
@@ -71,6 +82,7 @@ export default function PostContainer() {
   });
   let count = 0;
   const session = useSession();
+
   useEffect(() => {
     const PostFetch = async () => {
       const APIContact = await fetch("/api/posts", {
@@ -78,14 +90,53 @@ export default function PostContainer() {
       });
       if (APIContact.ok) {
         const data: Post[] = await APIContact.json();
+
+        // Check if new posts are added
+        if (data.length > fetchedPosts.length) {
+          notifyUsers("A new post has been added!"); // Send desktop notification
+        }
+
+        setPostCount(postCount + 1);
         setFetchedPosts(data);
       }
     };
+
     const PostInterval = setInterval(() => {
       PostFetch();
     }, 500);
+
     return () => clearInterval(PostInterval);
+  }, [
+    session.data?.user.seenNotifications,
+    postCount,
+    online,
+    fetchedPosts.length,
+    executed,
+  ]);
+
+  // Request notification permission on page load
+  useEffect(() => {
+    if (Notification.permission === "default") {
+      Notification.requestPermission().then((permission) => {
+        if (permission !== "granted") {
+          console.warn("Desktop notifications denied by the user.");
+        }
+      });
+    }
   }, []);
+
+  // Example notification function
+  const notifyUsers = (message) => {
+    if (Notification.permission === "granted") {
+      new Notification("New Post Alert!", {
+        body: message,
+        icon: "/path/to/icon.png", // Optional: path to notification icon
+      });
+    } else {
+      console.warn("Desktop notifications are not permitted.");
+    }
+  };
+
   useEffect(() => {
     if (session.data?.user.image) {
       setImageLoaded(false);
@@ -119,7 +170,7 @@ export default function PostContainer() {
         setOnlineUsers(data);
         if (session.data?.user.id && onlineUsers) {
           const TargetUserStatus = onlineUsers.find(
-            (user) => user.id === session.data?.user.id,
+            (user) => user.id === session.data?.user.id
           );
           if (TargetUserStatus) {
             setOnline(true);
@@ -600,7 +651,7 @@ export default function PostContainer() {
                         disabled={disabled}
                         handle={() => {
                           const button = document.getElementsByClassName(
-                            "imageUploader",
+                            "imageUploader"
                           )[0] as HTMLButtonElement;
                           button.click();
                         }}
@@ -638,7 +689,7 @@ export default function PostContainer() {
                 })
                 .map((post) => (
                   <Stack
-                    key={post.authorId}
+                    key={post.id}
                     sx={{
                       display: "flex",
                       position: "relative",
@@ -672,13 +723,37 @@ export default function PostContainer() {
                           height={40}
                           width={40}
                         />
-                        <Typography variant="h4">{post.name}</Typography>
+                        <Typography variant="h4" sx={{ width: "30%" }}>
+                          {post.name}
+                        </Typography>
                         <Typography
                           variant="body2"
-                          sx={{ fontSize: 10, color: "silver" }}
+                          sx={{ fontSize: 10, color: "silver", width: "30%" }}
                         >
                           {timeAgo(post.createdAt)}
                         </Typography>
+                        <Stack
+                          sx={{
+                            display: "flex",
+                            position: "relative",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "flex-end",
+                            width: "40%",
+                          }}
+                        >
+                          <IconButton
+                            onClick={() => DeletePost(post.id)}
+                            sx={{
+                              display:
+                                post.authorId === session.data?.user.id
+                                  ? "flex"
+                                  : "none",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faTrashCan} />
+                          </IconButton>
+                        </Stack>
                       </Stack>
                       <Typography variant="h5">
                         <Markdown>{post.content}</Markdown>
@@ -696,8 +771,8 @@ export default function PostContainer() {
                           alt="image1"
                           src={post.image1}
                           style={{ display: post.image1 ? "flex" : "none" }}
-                          width={240}
-                          height={110}
+                          width={480}
+                          height={380}
                         />
                         <CldImage
                           alt="image2"
