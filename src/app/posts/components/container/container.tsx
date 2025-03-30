@@ -126,7 +126,7 @@ export default function PostContainer() {
   }, []);
 
   // Example notification function
-  const notifyUsers = (message) => {
+  const notifyUsers = (message: string) => {
     if (Notification.permission === "granted") {
       new Notification("New Post Alert!", {
         body: message,
@@ -170,7 +170,7 @@ export default function PostContainer() {
         setOnlineUsers(data);
         if (session.data?.user.id && onlineUsers) {
           const TargetUserStatus = onlineUsers.find(
-            (user) => user.id === session.data?.user.id
+            (user) => user.id === session.data?.user.id,
           );
           if (TargetUserStatus) {
             setOnline(true);
@@ -651,7 +651,7 @@ export default function PostContainer() {
                         disabled={disabled}
                         handle={() => {
                           const button = document.getElementsByClassName(
-                            "imageUploader"
+                            "imageUploader",
                           )[0] as HTMLButtonElement;
                           button.click();
                         }}
