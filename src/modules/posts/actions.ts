@@ -4,7 +4,7 @@ import { prisma } from "../prisma/lib/prisma-client/prisma-client";
 
 export const PostDelete = async (random: string) => {
   const session = await getServerSession();
-  if (!session) {
+  if (!session || session.user.role !== "admin") {
     return { status: 401 };
   }
   console.log(random);

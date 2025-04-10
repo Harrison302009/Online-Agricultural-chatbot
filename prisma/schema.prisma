@@ -124,12 +124,12 @@ model Exam {
 }
 
 model Posts {
-    id        String    @id @default(cuid())
+    id        String     @id @default(cuid())
     avatar    String?
     content   String?
-    createdAt DateTime  @default(now())
-    updatedAt DateTime? @updatedAt
-    author    User?     @relation(fields: [authorId], references: [id])
+    createdAt DateTime   @default(now())
+    updatedAt DateTime?  @updatedAt
+    author    User?      @relation(fields: [authorId], references: [id])
     authorId  String?
     name      String?
     image1    String?
@@ -138,4 +138,15 @@ model Posts {
     image4    String?
     image5    String?
     video     String?
+    Comments  Comments[]
+}
+
+model Comments {
+    id          String   @id @default(cuid())
+    value       String?
+    avatar      String?
+    name        String?
+    commentid   String?
+    commentBase Posts?   @relation(fields: [commentid], references: [id])
+    createdAt   DateTime @default(now())
 }

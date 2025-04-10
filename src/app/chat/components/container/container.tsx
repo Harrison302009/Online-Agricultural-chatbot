@@ -18,8 +18,11 @@ import { GetAllChatMessagesResponse } from "../../../api/chat/route";
 import { MenuBar } from "@/components/menubar/menubar";
 import { CldImage } from "next-cloudinary";
 import { registerServiceWorker } from "@/utils/register-service-worker";
-import { DeleteOutline } from "@mui/icons-material";
+import { DeleteOutline, EmojiEmotionsRounded } from "@mui/icons-material";
 import LoadingSequence from "@/components/loading/sequence";
+import EmojiSelector from "@/components/emoji-picker/emoji-picker";
+import EmojiPicker from "emoji-picker-react";
+import { CssVarsProvider, Input } from "@mui/joy";
 
 const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
   cluster: "mt1",
@@ -35,8 +38,14 @@ export default function Container() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState("left");
 
-  const [input, setInput] = useState<string>("");
+  const [input, setInput] = useState({
+    record: "",
+    input: "",
+    actual: "",
+  });
   const router = useRouter();
+  const [emojipopup, setEmojipopup] = useState(false);
+  const [emoji, setEmoji] = useState("");
 
   const { data: databaseChatMessages, mutate: refetchDbMessages } =
     useAllChatMessages();
@@ -163,6 +172,29 @@ export default function Container() {
           left: 0,
         }}
       >
+        {emojipopup ? (
+          <Stack
+            sx={{
+              display: "flex",
+              position: "absolute",
+              bottom: "8%",
+              right: "2%",
+              backgroundColor: "silver",
+              zIndex: 100,
+            }}
+          >
+            <EmojiPicker
+              onEmojiClick={(data) => {
+                setInput((prevValues) => ({
+                  ...prevValues,
+                  input: `${input.input}${data.emoji}`,
+                }));
+              }}
+            />
+          </Stack>
+        ) : (
+          <Typography>Loading...</Typography>
+        )}
         <Stack
           sx={{
             display: "flex",
@@ -332,35 +364,64 @@ export default function Container() {
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
-                    message: input,
+                    message: input.input,
                     email: session.data?.user?.email || "harrisjohnu@gmail.com",
                   }),
                 });
-                setInput("");
+                setInput((prevValues) => ({
+                  ...prevValues,
+                  input: "",
+                }));
               }}
             >
-              <input
-                placeholder="Message"
-                id="message"
-                style={{
-                  display: "flex",
-                  position: "fixed",
-                  bottom: 0,
-                  marginTop: "auto",
-                  alignItems: "bottom",
-                  justifyContent: "bottom",
-                  borderBottom: 0,
-                  flexGrow: 1,
-                  marginRight: 10,
-                  backgroundColor: "rgba(128, 128, 128, 0.3)",
-                  height: 50,
-                  width: 1250,
-                  outline: "none",
-                  border: "none",
-                }}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-              />
+              <CssVarsProvider>
+                <Input
+                  placeholder="Message"
+                  id="message"
+                  style={{
+                    display: "flex",
+                    position: "fixed",
+                    bottom: 0,
+                    marginTop: "auto",
+                    alignItems: "bottom",
+                    justifyContent: "bottom",
+                    borderBottom: 0,
+                    flexGrow: 1,
+                    marginRight: 10,
+                    backgroundColor: "rgba(128, 128, 128, 0.3)",
+                    height: 50,
+                    width: 1250,
+                    outline: "none",
+                    border: "none",
+                  }}
+                  endDecorator={
+                    <EmojiEmotionsRounded
+                      onClick={() => setEmojipopup(true)}
+                      sx={{ cursor: "pointer", zIndex: 5 }}
+                    />
+                  }
+                  value={input.input}
+                  onClick={() => {
+                    if (emojipopup === true) {
+                      setEmojipopup(false);
+                    }
+                  }}
+                  onChange={(e) =>
+                    setInput((prevValues) => ({
+                      ...prevValues,
+                      input: e.target.value
+                        .replace(/:\)/g, "🙂")
+                        .replace(/:\(/g, "🙁")
+                        .replace(/-_-/g, "😒")
+                        .replace(/:O/g, "😲")
+                        .replace(/:cool:/g, "😎")
+                        .replace(/:rage:/g, "😡")
+                        .replace(/:thinking:/g, "🤔")
+                        .replace(/:smile:/g, ""),
+                    }))
+                  }
+                />
+              </CssVarsProvider>
               <button
                 style={{
                   display: "flex",
@@ -386,7 +447,10 @@ export default function Container() {
                           session.data?.user?.email || "harrisjohnu@gmail.com",
                       }),
                     });
-                    setInput("");
+                    setInput((prevValues) => ({
+                      ...prevValues,
+                      input: "",
+                    }));
                   }}
                   onMouseEnter={(u) => {
                     u.preventDefault();

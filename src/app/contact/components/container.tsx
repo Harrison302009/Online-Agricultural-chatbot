@@ -9,6 +9,7 @@ import { NavBar } from "@/components/navbar/navbar";
 import { useSession } from "next-auth/react";
 import { Mice } from "@/components/mice/mouse";
 import { MenuBar } from "@/components/menubar/menubar";
+import EmojiSelector from "@/components/emoji-picker/emoji-picker";
 
 export default function Container() {
   const [name, setName] = useState("");
@@ -183,6 +184,7 @@ export default function Container() {
                 });
               }}
             >
+              <EmojiSelector />
               <TextField
                 label="First Name"
                 id="fname"
