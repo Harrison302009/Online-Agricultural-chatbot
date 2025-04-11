@@ -9,24 +9,22 @@ import {
   Collapse,
 } from "@mui/material";
 import { ExpandMore, ExpandLess, SendOutlined } from "@mui/icons-material";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import "../../../globalicons.css";
 import { useRouter } from "next/navigation";
 import { useChat } from "ai/react";
 import Markdown from "react-markdown";
 import { MenuBar } from "@/components/menubar/menubar";
 import { useSession } from "next-auth/react";
-import { CldImage, CldUploadButton, CldVideoPlayer } from "next-cloudinary";
+import { CldImage, CldUploadButton } from "next-cloudinary";
+import {atom, useAtom} from 'jotai';
 import {
   Badge,
   Button,
   Card,
   CssVarsProvider,
-  Dropdown,
   IconButton,
   Input,
-  Menu,
-  MenuItem,
   Modal,
   ModalClose,
   ModalDialog,
@@ -37,18 +35,12 @@ import {
 import Options from "@/components/options-components/options";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCircleExclamation,
-  faDeleteLeft,
-  faListDots,
-  faTimesCircle,
   faTrashCan,
 } from "@fortawesome/free-solid-svg-icons";
-import { CheckCircleOutlineRounded, DonutSmall } from "@mui/icons-material";
-import { User } from "@/app/dashboard/components/container/container";
-import { UpdateStatus } from "@/modules/status/actions";
-import { PostDelete } from "@/modules/posts/actions";
-import { NotifHandler } from "@/modules/notifications/actions";
+import { CheckCircleOutlineRounded } from "@mui/icons-material";
 import { DeletePost } from "@/modules/posts/delete-post/actions";
+import useSWR from "swr";
+import { loadingAtom } from "./state";
 
 type Post = {
   id: string;
@@ -70,27 +62,22 @@ type Comments = {
   createdAt: string;
   commentid: string;
 };
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
 export default function PostContainer() {
   const router = useRouter();
   const { messages, input, handleInputChange, handleSubmit } = useChat();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useAtom(loadingAtom);
   const [success, setSuccess] = useState(false);
   const [failure, setFailure] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(true);
   const [open, setOpen] = useState(false);
-  const [fetchedComments, setFetchedComments] = useState<Comments[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [online, setOnline] = useState(false);
-  const [executed, setExecuted] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [comment, setComment] = useState("");
-  const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
-  const [fetchedPosts, setFetchedPosts] = useState<Post[]>([]);
-  const [postCount, setPostCount] = useState(0);
-  const [newPost, setNewPost] = useState(false);
-  const [commentOpen, setCommentOpen] = useState<{ [key: string]: boolean }>(
-    {},
-  );
+  const [commentOpen, setCommentOpen] = useState<{ [key: string]: boolean }>({});
   const [post, setPost] = useState({
     content: "",
     name: "",
@@ -101,54 +88,12 @@ export default function PostContainer() {
     image5: "",
     video: "",
   });
-  let count = 0;
+  const [postCount, setPostCount] = useState(0);
   const session = useSession();
-  useEffect(() => {
-    const commentFetch = async () => {
-      const APIContact = await fetch("/api/comments", {
-        method: "GET",
-      });
-      if (APIContact.ok) {
-        const data: Comments[] = await APIContact.json();
-        setFetchedComments(data);
-      }
-    };
-    const CommentInterval = setInterval(() => {
-      commentFetch();
-    }, 500);
-    return () => clearInterval(CommentInterval);
-  }, []);
-  useEffect(() => {
-    const PostFetch = async () => {
-      const APIContact = await fetch("/api/posts", {
-        method: "GET",
-      });
-      if (APIContact.ok) {
-        const data: Post[] = await APIContact.json();
 
-        // Check if new posts are added
-        if (data.length > fetchedPosts.length) {
-          notifyUsers("A new post has been added!"); // Send desktop notification
-        }
+  const { data: fetchedComments = [], mutate: mutateComments } = useSWR<Comments[]>('/api/comments', fetcher, { refreshInterval: 2000 });
+  const { data: fetchedPosts = [], mutate: mutatePosts } = useSWR<Post[]>('/api/posts', fetcher, { refreshInterval: 2000 });
 
-        setPostCount(postCount + 1);
-        setFetchedPosts(data);
-      }
-    };
-    const PostInterval = setInterval(() => {
-      PostFetch();
-    }, 500);
-
-    return () => clearInterval(PostInterval);
-  }, [
-    session.data?.user.seenNotifications,
-    postCount,
-    online,
-    fetchedPosts.length,
-    executed,
-  ]);
-
-  // Request notification permission on page load
   useEffect(() => {
     if (Notification.permission === "default") {
       Notification.requestPermission().then((permission) => {
@@ -159,12 +104,11 @@ export default function PostContainer() {
     }
   }, []);
 
-  // Example notification function
   const notifyUsers = (message: string) => {
     if (Notification.permission === "granted") {
       new Notification("New Post Alert!", {
         body: message,
-        icon: "/path/to/icon.png", // Optional: path to notification icon
+        icon: "/path/to/icon.png",
       });
     } else {
       console.warn("Desktop notifications are not permitted.");
@@ -172,53 +116,24 @@ export default function PostContainer() {
   };
 
   useEffect(() => {
-    if (session.data?.user.image) {
-      setImageLoaded(false);
+    if (fetchedPosts.length > 0 && fetchedPosts.length > postCount) {
+      notifyUsers("A new post has been added!");
+      setPostCount(fetchedPosts.length);
     }
-  }, [session.data?.user.image]);
-  useEffect(() => {
-    window.addEventListener("focus", () => {
-      UpdateStatus("online");
+  }, [fetchedPosts]);
+
+  const registerComment = async (postId: string) => {
+    const APIContact = await fetch("/api/comments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ comment, postId }),
     });
-    return () =>
-      window.removeEventListener("focus", () => {
-        UpdateStatus("online");
-      });
-  }, []);
-  useEffect(() => {
-    window.addEventListener("blur", () => {
-      UpdateStatus("offline");
-    });
-    return () =>
-      window.removeEventListener("blur", () => {
-        UpdateStatus("offline");
-      });
-  }, []);
-  useEffect(() => {
-    const OnlineFetcher = async () => {
-      const APIFetch = await fetch("/api/user/fetch-online-users", {
-        method: "GET",
-      });
-      if (APIFetch.ok) {
-        const data: User[] = await APIFetch.json();
-        setOnlineUsers(data);
-        if (session.data?.user.id && onlineUsers) {
-          const TargetUserStatus = onlineUsers.find(
-            (user) => user.id === session.data?.user.id,
-          );
-          if (TargetUserStatus) {
-            setOnline(true);
-          } else {
-            setOnline(false);
-          }
-        }
-      }
-    };
-    const fetchInterval = setInterval(() => {
-      OnlineFetcher();
-    }, 500);
-    return () => clearInterval(fetchInterval);
-  }, [onlineUsers, session.data?.user.id]);
+    if (APIContact.ok) {
+      alert("Comment uploaded successfully");
+      mutateComments();
+    }
+  };
+
   const UploadPost = async () => {
     const APIContact = await fetch("/api/posts", {
       method: "POST",
@@ -232,7 +147,7 @@ export default function PostContainer() {
         setSuccess(false);
       }, 2000);
       setModalOpen(false);
-      window.location.reload();
+      mutatePosts();
     } else {
       setLoading(false);
       setFailure(true);
@@ -241,6 +156,19 @@ export default function PostContainer() {
       }, 2000);
     }
   };
+
+  const PostDelete = async (id: string) => {
+    const response = await fetch(`/api/posts/${id}`, {
+      method: "DELETE",
+    });
+    if (response.ok) {
+      alert("Post deleted successfully");
+      mutatePosts();
+    } else {
+      alert("Failed to delete post");
+    }
+  };
+
   function timeAgo(postTime: string) {
     const now = new Date();
     const postDate = new Date(postTime);
@@ -264,27 +192,14 @@ export default function PostContainer() {
       return `${days}d ago`;
     }
   }
-  const comments = [
-    "This is the first comment.",
-    "This is the second comment.",
-    "This is the third comment.",
-  ];
+
   const handleToggle = (postId: string) => {
     setCommentOpen((prevState) => ({
       ...prevState,
       [postId]: !prevState[postId],
     }));
   };
-  const registerComment = async (postId: string) => {
-    const APIContact = await fetch("/api/comments", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ comment, postId }),
-    });
-    if (APIContact.ok) {
-      alert("Comment uploaded successfully");
-    }
-  };
+
   return (
     <Box>
       <Stack
@@ -310,7 +225,7 @@ export default function PostContainer() {
             open={failure}
             variant="soft"
             color="danger"
-            startDecorator={<FontAwesomeIcon icon={faTimesCircle} />}
+            startDecorator={<FontAwesomeIcon icon={faTrashCan} />}
             sx={{ boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)" }}
           >
             Upload Failed
@@ -863,20 +778,24 @@ export default function PostContainer() {
                           gap: 1,
                         }}
                       >
-                        <CldImage
-                          alt="image1"
-                          src={post.image1}
-                          style={{ display: post.image1 ? "flex" : "none" }}
-                          width={480}
-                          height={380}
-                        />
-                        <CldImage
-                          alt="image2"
-                          src={post.image2}
-                          style={{ display: post.image2 ? "flex" : "none" }}
-                          width={240}
-                          height={110}
-                        />
+                        {post.image1 && post.image1.trim() !== "" && (
+                          <CldImage
+                            alt="image1"
+                            src={post.image1}
+                            style={{ display: "flex" }}
+                            width={480}
+                            height={380}
+                          />
+                        )}
+                        {post.image2 && post.image2.trim() !== "" && (
+                          <CldImage
+                            alt="image2"
+                            src={post.image2}
+                            style={{ display: "flex" }}
+                            width={240}
+                            height={110}
+                          />
+                        )}
                       </Stack>
                       <Box
                         sx={{

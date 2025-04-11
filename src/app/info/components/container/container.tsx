@@ -80,6 +80,7 @@ export default function RegistrationForm() {
   ) => {
     setValues({ ...values, countryCode: `${code}` });
   };
+  
   if (session.status === "loading") {
     return (
       <CssVarsProvider>
@@ -124,6 +125,7 @@ export default function RegistrationForm() {
       </CssVarsProvider>
     );
   }
+
   return (
     <CssVarsProvider>
       <Box
@@ -280,7 +282,7 @@ export default function RegistrationForm() {
                   --Select-A-Country--
                 </Option>
                 {data.map((country) => (
-                  <Option value={country.country} key={country.currency}>
+                  <Option value={country.country} key={country.country}>
                     {country.country}
                   </Option>
                 ))}
