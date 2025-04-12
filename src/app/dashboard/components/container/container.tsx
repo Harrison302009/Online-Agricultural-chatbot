@@ -24,6 +24,16 @@ import MobileDisplay from "../../components/mobile-display/mobile-display";
 import usePusher from "@/modules/hooks/pusher/pusher";
 import TabletDisplay from "../../components/tablet-display/tablet-display";
 import { CldImage } from "next-cloudinary";
+import {Line} from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import mixpanel from "mixpanel-browser";
 import {
   CssVarsProvider,
@@ -38,6 +48,8 @@ import {
 } from "@mui/joy";
 import { UpdateStatus } from "@/modules/status/actions";
 import LoadingSequence from "@/components/loading/sequence";
+import { useAtom } from "jotai";
+import { currencySymbol, pricer } from "@/app/prices/prices";
 
 type User = {
   id: string;
@@ -46,6 +58,8 @@ type User = {
   country: string;
   image: string;
 };
+
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend)
 export default function Container() {
   usePusher();
   const [loaded, setLoaded] = useState(false);
@@ -74,8 +88,10 @@ export default function Container() {
   const [usersAvailable, setUsersAvailable] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
   const [userState, setUserState] = useState();
+  const [currency, setCurrency] = useAtom(currencySymbol)
   const session = useSession();
   const router = useRouter();
+  const [prices, setPrices] = useAtom(pricer);
   const [count, setCount] = useState(0);
   const [percount, setPercount] = useState(0.0);
   const perstep = 0.1;
@@ -84,6 +100,15 @@ export default function Container() {
   const incrementSpeed = 50;
   const perspeed = 50;
   const step = 1;
+  useEffect(() => {
+    const userPlace = data.find((country) => country.country === session.data?.user.country);
+    if (userPlace && userPlace.price) {
+      setPrices(userPlace.price);
+      setCurrency(userPlace.symbol);
+    } else {
+      setPrices([]); // Fallback to an empty array if no price is found
+    }
+  }, [session.data?.user.country])
   const GetUsers = async () => {
     const APIContact = await fetch("/api/user/fetch-users", {
       method: "GET",
@@ -465,6 +490,135 @@ export default function Container() {
     }
   };
 
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          title: (tooltipItems: any) => {
+            const datasetIndex = tooltipItems[0].datasetIndex;
+            const dataIndex = tooltipItems[0].dataIndex;
+            const dataset = graph.datasets[datasetIndex];
+            return dataset.title[dataIndex];
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        title: {
+          display: true,
+          text: "Months",
+          font: {
+            size: 14,
+          },
+        },
+      },
+      y: {
+        grid: {
+          color: "rgba(195, 245, 179, 0.4)",
+        },
+        title: {
+          display: true,
+          text: `Price (${currency}/bushel)`,
+          font: {
+            size: 14,
+          },
+        },
+      },
+    },
+  };
+  
+  const currentMonth = new Date().getMonth();
+  const monthLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  
+  const graph = {
+    labels: monthLabels.slice(0, currentMonth + 1),
+    datasets: [
+      {
+        label: "Wheat",
+        data: prices.find((item) => item.name === "Wheat")?.price,
+        borderColor: "rgb(245, 222, 179)",
+        backgroundColor: "rgba(245, 222, 179, 0.64)",
+        borderWidth: 2,
+        pointRadius: 4,
+        title: [
+          "Stable due to stable global supply",
+          "Increased due to lower production forecasts",
+          "Marginal decline observed following improved crop conditions among key exporting nations.",
+          "Further decline attributed to trade tensions",
+        ],
+        pointBackgroundColor: "rgb(245, 222, 179)",
+      },
+      {
+        label: "Rice",
+        data: prices.find((item) => item.name === "Rice")?.price,
+        borderColor: "rgb(114, 39, 39)",
+        backgroundColor: "rgba(114, 39, 39, 0.64)",
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: "rgb(114, 39, 39)",
+        title: [
+          "Abundant exportable supplies suppressed prices.",
+          "A modest decline, as early market adjustments began to take effect.",
+          "Continued drop reflecting evolving global supply data and trading sentiment.",
+          "By early April, prices have fallen by about USD 0.95 from January—an overall 6.77% decline.",
+        ],
+      },
+      {
+        label: "Soybeans",
+        data: prices.find((item) => item.name === "Soybeans")?.price,
+        borderColor: "rgb(104, 77, 179)",
+        backgroundColor: "rgba(104, 77, 179, 0.64)",
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: "rgb(104, 77, 179)",
+        title: [
+          "Improved weather conditions resulted in lower prices.",
+          "Recovered as a result of constrained global supply.",
+          "Decline observed due to decreased demand.",
+          "Further decline attributed to enhanced production forecasts.",
+        ],
+      },
+      {
+        label: "Sugar",
+        data: prices.find((item) => item.name === "Sugar")?.price,
+        borderColor: "rgb(35, 9, 68)",
+        backgroundColor: "rgba(35, 9, 68, 0.64)",
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: "rgb(35, 9, 68)",
+        title: [
+          "Prices remained stable, reflecting a balance between supply and demand.",
+          "A marginal uptick reflecting minor shifts in supply/demand and early market adjustments.",
+          "Reports suggest an overall increase of about 0.08 c/lb (≈0.41% rise) from January levels.",
+          "Prices have remained relatively stable into early April, with little additional movement observed.",
+        ],
+      },
+      {
+        label: "Cotton",
+        data: prices.find((item) => item.name === "Cotton")?.price,
+        borderColor: "rgb(190, 86, 147)",
+        backgroundColor: "rgba(190, 86, 147, 0.64)",
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: "rgb(190, 86, 147)",
+        title: [
+          "A sudden decrease marking its lowest value since November 2020.",
+          "Prices remained relatively stable, with the A Index easing slightly downward",
+          "The A Index held steady.",
+          "A slight downward trend.",
+        ]
+      }
+    ],
+  };
   return (
     <Box>
       <MobileDisplay />
@@ -868,6 +1022,8 @@ export default function Container() {
             ></Skeleton>
           )}
         </Stack>
+        <Typography variant="h4" sx={{ fontFamily: "monospace" }}>Crop Price Trends</Typography>
+        <Line data={graph} options={options} />
       </Stack>
     </Box>
   );
