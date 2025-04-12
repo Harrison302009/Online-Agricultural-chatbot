@@ -11,21 +11,21 @@ export const data = [
     price: [
       {
         name: "Wheat",
-        price: [398.53, 394.91, 387.66, 371.00],
+        price: [398.53, 394.91, 387.66, 371.0],
       },
       {
         name: "Rice",
-        price: [1066.61, 993.43, 970.24, 947.78]
+        price: [1066.61, 993.43, 970.24, 947.78],
       },
       {
         name: "Soybeans",
-        price: [978.21, 999.95, 920.24, 913.00],
+        price: [978.21, 999.95, 920.24, 913.0],
       },
       {
         name: "Sugar",
-        price: [1397.75, 1399.93, 1403.55, 1,404.27],
-      }
-    ]
+        price: [1397.75, 1399.93, 1403.55, 1, 404.27],
+      },
+    ],
   },
   {
     country: "Algeria",
@@ -513,34 +513,30 @@ data.forEach((country) => {
     country.price = [
       {
         name: "Wheat",
-        price: [5.48, 5.43, 5.33, 5.10].map((price) =>
-          (price * country.rate)
-        ),
+        price: [5.48, 5.43, 5.33, 5.1].map((price) => price * country.rate),
       },
       {
         name: "Rice",
-        price: [14.68, 13.67, 13.35, 13.04].map((price) =>
-          (price * country.rate)
+        price: [14.68, 13.67, 13.35, 13.04].map(
+          (price) => price * country.rate,
         ),
       },
       {
         name: "Soybeans",
-        price: [13.46, 13.76, 12.66, 12.56].map((price) =>
-          (price * country.rate)
+        price: [13.46, 13.76, 12.66, 12.56].map(
+          (price) => price * country.rate,
         ),
       },
       {
         name: "Sugar",
-        price: [19.23, 19.26, 19.31, 19.32].map((price) =>
-          (price * country.rate)
+        price: [19.23, 19.26, 19.31, 19.32].map(
+          (price) => price * country.rate,
         ),
       },
       {
         name: "Cotton",
-        price: [0.773, 0.77, 0.78, 0.6391].map((price) => (
-          price * country.rate
-        ))
-      }
+        price: [0.773, 0.77, 0.78, 0.6391].map((price) => price * country.rate),
+      },
     ];
   }
 });

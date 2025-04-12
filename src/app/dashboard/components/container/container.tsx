@@ -24,7 +24,7 @@ import MobileDisplay from "../../components/mobile-display/mobile-display";
 import usePusher from "@/modules/hooks/pusher/pusher";
 import TabletDisplay from "../../components/tablet-display/tablet-display";
 import { CldImage } from "next-cloudinary";
-import {Line} from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   LineElement,
@@ -59,7 +59,14 @@ type User = {
   image: string;
 };
 
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend)
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+);
 export default function Container() {
   usePusher();
   const [loaded, setLoaded] = useState(false);
@@ -88,7 +95,7 @@ export default function Container() {
   const [usersAvailable, setUsersAvailable] = useState(false);
   const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
   const [userState, setUserState] = useState();
-  const [currency, setCurrency] = useAtom(currencySymbol)
+  const [currency, setCurrency] = useAtom(currencySymbol);
   const session = useSession();
   const router = useRouter();
   const [prices, setPrices] = useAtom(pricer);
@@ -101,14 +108,16 @@ export default function Container() {
   const perspeed = 50;
   const step = 1;
   useEffect(() => {
-    const userPlace = data.find((country) => country.country === session.data?.user.country);
+    const userPlace = data.find(
+      (country) => country.country === session.data?.user.country,
+    );
     if (userPlace && userPlace.price) {
       setPrices(userPlace.price);
       setCurrency(userPlace.symbol);
     } else {
       setPrices([]); // Fallback to an empty array if no price is found
     }
-  }, [session.data?.user.country])
+  }, [session.data?.user.country, setCurrency, setPrices]);
   const GetUsers = async () => {
     const APIContact = await fetch("/api/user/fetch-users", {
       method: "GET",
@@ -535,10 +544,23 @@ export default function Container() {
       },
     },
   };
-  
+
   const currentMonth = new Date().getMonth();
-  const monthLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  
+  const monthLabels = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
   const graph = {
     labels: monthLabels.slice(0, currentMonth + 1),
     datasets: [
@@ -615,8 +637,8 @@ export default function Container() {
           "Prices remained relatively stable, with the A Index easing slightly downward",
           "The A Index held steady.",
           "A slight downward trend.",
-        ]
-      }
+        ],
+      },
     ],
   };
   return (
@@ -1022,7 +1044,9 @@ export default function Container() {
             ></Skeleton>
           )}
         </Stack>
-        <Typography variant="h4" sx={{ fontFamily: "monospace" }}>Crop Price Trends</Typography>
+        <Typography variant="h4" sx={{ fontFamily: "monospace" }}>
+          Crop Price Trends
+        </Typography>
         <Line data={graph} options={options} />
       </Stack>
     </Box>
