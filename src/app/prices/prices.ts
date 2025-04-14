@@ -6,3 +6,5 @@ type Price = {
 };
 export const pricer = atom<Price[]>([]);
 export const currencySymbol = atom<string>("$");
+
+export const userCount = atom<number>(0);
