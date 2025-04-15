@@ -35,30 +35,30 @@ model Session {
 }
 
 model User {
-    id              String        @id @default(cuid())
-    name            String?
-    email           String?       @unique
-    password        String?
-    username        String?       @unique
-    lastLogin       DateTime      @default(now())
-    phoneNumber     String?
-    country         String        @default("Unknown")
-    address         String        @default("Unknown")
-    role            String        @default("user")
-    status          String        @default("offline")
-    isBanned        Boolean       @default(false)
-    plan            String        @default("new")
-    receivedMessage Boolean       @default(false)
-    hasPendingApplications Boolean @default(false)
-    ApplicationStatus String?
-    emailVerified   DateTime?
-    image           String?
-    accounts        Account[]
-    sessions        Session[]
-    Message         Message[]
-    ChatMessage     ChatMessage[]
-    MessageSent     MessageSent[]
-    Exam            Exam[]
+    id                     String        @id @default(cuid())
+    name                   String?
+    email                  String?       @unique
+    password               String?
+    username               String?       @unique
+    lastLogin              DateTime      @default(now())
+    phoneNumber            String?
+    country                String        @default("Unknown")
+    address                String        @default("Unknown")
+    role                   String        @default("user")
+    status                 String        @default("offline")
+    isBanned               Boolean       @default(false)
+    plan                   String        @default("new")
+    receivedMessage        Boolean       @default(false)
+    hasPendingApplications Boolean       @default(false)
+    ApplicationStatus      String?
+    emailVerified          DateTime?
+    image                  String?       @default("vdivydqbavnnlidtxavz")
+    accounts               Account[]
+    sessions               Session[]
+    Message                Message[]
+    ChatMessage            ChatMessage[]
+    MessageSent            MessageSent[]
+    Exam                   Exam[]
 }
 
 model VerificationToken {
@@ -104,19 +104,19 @@ model RegisteredUsers {
 }
 
 model Exam {
-    examId               String   @id @default(cuid())
-    userId               String?
-    user                 User?    @relation(fields: [userId], references: [id])
-    Answer1              String?
-    Certificate          String?
-    Answer2              String?
-    Answer3              String?
-    Answer4              String?
-    Answer5              String?
-    Answer6              String?
-    Answer7              String?
-    Answer8              String?
-    Answer9              String?
-    Answer10             String?
-    score                Float?
+    examId      String  @id @default(cuid())
+    userId      String?
+    user        User?   @relation(fields: [userId], references: [id])
+    Answer1     String?
+    Certificate String?
+    Answer2     String?
+    Answer3     String?
+    Answer4     String?
+    Answer5     String?
+    Answer6     String?
+    Answer7     String?
+    Answer8     String?
+    Answer9     String?
+    Answer10    String?
+    score       Float?
 }
