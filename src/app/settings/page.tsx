@@ -5,6 +5,11 @@ import {
   Avatar,
   Box,
   Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  Grid,
   ListItem,
   ListItemButton,
   ListItemIcon,
@@ -124,144 +129,161 @@ export default function Settings() {
               onClick={doneCustomizing}
             />
             <Stack id="profileDisplay">
-              <Typography variant="h2" id="userDisplay">
-                User profile
-              </Typography>
-              <br />
-              <Stack
-                sx={{
-                  display: "flex",
-                  position: "relative",
-                  width: "100%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {imageLoaded ? (
-                  <Avatar
-                    style={{ height: 175, width: 175 }}
-                    onMouseOver={PointOut}
-                    onMouseOut={PointBack}
-                    onClick={() => {
-                      const image = document.getElementsByClassName(
-                        "uploadButton",
-                      )[0] as HTMLButtonElement;
-                      image.click();
-                    }}
-                  >
-                    <Typography variant="h1">
-                      {session.data?.user?.name
-                        ?.substring(0, 1)
-                        .toUpperCase() ||
-                        session.data?.user.email?.substring(0, 1).toUpperCase()}
-                    </Typography>
-                  </Avatar>
-                ) : (
-                  <CldImage
-                    src={session.data?.user.image || ""}
-                    onMouseOver={PointOut}
-                    onMouseOut={PointBack}
-                    onClick={() => {
-                      const image = document.getElementsByClassName(
-                        "uploadButton",
-                      )[0] as HTMLButtonElement;
-                      image.click();
-                    }}
-                    width={200}
-                    height={200}
-                    alt="Uploaded Image"
-                    style={{ objectFit: "cover", borderRadius: 100 }}
-                    draggable="false"
-                  />
-                )}
-                <CldUploadButton
-                  className="uploadButton"
-                  options={{
-                    maxFiles: 1,
-                    cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-                    cropping: true,
-                    croppingAspectRatio: 1,
-                  }}
-                  onSuccess={async (results) => {
-                    const request = await fetch("/api/image", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        image: (results.info as any).public_id,
-                      }),
-                    });
-                    if (request.status === 200) {
-                      alert("Profile image updated successfully");
-                      window.location.reload();
-                    }
-                  }}
-                  uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
+              <Card>
+                <CardHeader
+                  title="User Profile"
+                  titleTypographyProps={{ variant: "h2" }}
                 />
-              </Stack>
-              <br />
-              <Typography
-                variant="h5"
-                id="userName"
-                className="userComponents"
-                onMouseOver={TextOut}
-                onMouseOut={TextBack}
-              >
-                Name: {session.data?.user?.name}
-              </Typography>
-              <br />
-              <Typography
-                variant="h5"
-                id="userEmail"
-                className="userComponents"
-                onMouseOver={TextOut}
-                onMouseOut={TextBack}
-              >
-                Email: {session.data?.user?.email}
-              </Typography>
-              <br />
-              <Typography
-                variant="h5"
-                className="userComponents"
-                id="userStreet"
-                onMouseOver={TextOut}
-                onMouseOut={TextBack}
-              >
-                Address: {session.data?.user.address}
-              </Typography>
-              <br />
-              <Typography
-                variant="h5"
-                className="userComponents"
-                id="userCountry"
-                onMouseOver={TextOut}
-                onMouseOut={TextBack}
-              >
-                Country: {session.data?.user.country}
-              </Typography>
-              <br />
-              <Typography
-                variant="h5"
-                className="userComponents"
-                id="userPhone"
-                onMouseOver={TextOut}
-                onMouseOut={TextBack}
-              >
-                Phone No.: {session.data?.user.phoneNumber}
-              </Typography>
-              <br />
-              <Button
-                variant="outlined"
-                id="editProfile"
-                onMouseOver={PointOut}
-                onMouseOut={PointBack}
-                onClick={() => {
-                  router.push("/settings/edit-user-profile");
-                }}
-              >
-                Edit User Profile
-              </Button>
+                <Divider />
+                <CardContent>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <Stack
+                        sx={{
+                          display: "flex",
+                          position: "relative",
+                          width: "100%",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {imageLoaded ? (
+                          <Avatar
+                            style={{ height: 175, width: 175 }}
+                            onMouseOver={PointOut}
+                            onMouseOut={PointBack}
+                            onClick={() => {
+                              const image = document.getElementsByClassName(
+                                "uploadButton",
+                              )[0] as HTMLButtonElement;
+                              image.click();
+                            }}
+                          >
+                            <Typography variant="h1">
+                              {session.data?.user?.name
+                                ?.substring(0, 1)
+                                .toUpperCase() ||
+                                session.data?.user.email
+                                  ?.substring(0, 1)
+                                  .toUpperCase()}
+                            </Typography>
+                          </Avatar>
+                        ) : (
+                          <CldImage
+                            src={session.data?.user.image || ""}
+                            onMouseOver={PointOut}
+                            onMouseOut={PointBack}
+                            onClick={() => {
+                              const image = document.getElementsByClassName(
+                                "uploadButton",
+                              )[0] as HTMLButtonElement;
+                              image.click();
+                            }}
+                            width={200}
+                            height={200}
+                            alt="Uploaded Image"
+                            style={{ objectFit: "cover", borderRadius: 100 }}
+                            draggable="false"
+                          />
+                        )}
+                        <CldUploadButton
+                          className="uploadButton"
+                          options={{
+                            maxFiles: 1,
+                            cloudName:
+                              process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+                            cropping: true,
+                            croppingAspectRatio: 1,
+                          }}
+                          onSuccess={async (results) => {
+                            const request = await fetch("/api/image", {
+                              method: "POST",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({
+                                image: (results.info as any).public_id,
+                              }),
+                            });
+                            if (request.status === 200) {
+                              alert("Profile image updated successfully");
+                              window.location.reload();
+                            }
+                          }}
+                          uploadPreset={
+                            process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME
+                          }
+                        />
+                      </Stack>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Stack>
+                        <Typography
+                          variant="h5"
+                          id="userName"
+                          className="userComponents"
+                          onMouseOver={TextOut}
+                          onMouseOut={TextBack}
+                        >
+                          Name: {session.data?.user?.name}
+                        </Typography>
+                        <br />
+                        <Typography
+                          variant="h5"
+                          id="userEmail"
+                          className="userComponents"
+                          onMouseOver={TextOut}
+                          onMouseOut={TextBack}
+                        >
+                          Email: {session.data?.user.email}
+                        </Typography>
+                        <br />
+                        <Typography
+                          variant="h5"
+                          className="userComponents"
+                          id="userStreet"
+                          onMouseOver={TextOut}
+                          onMouseOut={TextBack}
+                        >
+                          Address: {session.data?.user.address}
+                        </Typography>
+                        <br />
+                        <Typography
+                          variant="h5"
+                          className="userComponents"
+                          id="userCountry"
+                          onMouseOver={TextOut}
+                          onMouseOut={TextBack}
+                        >
+                          Country: {session.data?.user.country}
+                        </Typography>
+                        <br />
+                        <Typography
+                          variant="h5"
+                          className="userComponents"
+                          id="userPhone"
+                          onMouseOver={TextOut}
+                          onMouseOut={TextBack}
+                        >
+                          Phone No.: {session.data?.user.phoneNumber}
+                        </Typography>
+                        <br />
+                        <Button
+                          variant="outlined"
+                          id="editProfile"
+                          onMouseOver={PointOut}
+                          onMouseOut={PointBack}
+                          onClick={() => {
+                            router.push("/settings/edit-user-profile");
+                          }}
+                        >
+                          Edit User Profile
+                        </Button>
+                      </Stack>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
             </Stack>
           </Stack>
         </Stack>
