@@ -51,7 +51,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   Tooltip,
-  Legend
+  Legend,
 );
 
 export default function AgriculturalDashboard() {
@@ -84,7 +84,7 @@ export default function AgriculturalDashboard() {
       education: "",
       country: "",
       address: "",
-    }
+    },
   );
   const [drop, setDrop] = useState(false);
   const session = useSession();
@@ -104,7 +104,7 @@ export default function AgriculturalDashboard() {
     const fetchUsers = async () => {
       const response = await TotalUsers();
       const userCountry = data.find(
-        (country) => country.country === session.data?.user.country
+        (country) => country.country === session.data?.user.country,
       );
       if (userCountry && userCountry.price) {
         setPrice(userCountry.price);
