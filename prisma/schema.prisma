@@ -150,3 +150,4 @@ model Comments {
     commentBase Posts?   @relation(fields: [commentid], references: [id])
     createdAt   DateTime @default(now())
 }
+
