@@ -509,7 +509,7 @@ data.forEach((country) => {
   }
 });
 data.forEach((country) => {
-  if (country.rate && country.country !== "Afghanistan") {
+  if (country.rate && country.country !== "United States") {
     country.price = [
       {
         name: "Wheat",
@@ -535,7 +535,17 @@ data.forEach((country) => {
       },
       {
         name: "Cotton",
-        price: [0.773, 0.77, 0.78, 0.6391].map((price) => price * country.rate),
+        price: [24.74, 24.64, 24.96, 20.45].map(
+          (price) => price * country.rate,
+        ),
+      },
+      {
+        name: "Maize",
+        price: [4.29, 4.88, 4.6, 4.66].map((price) => price * country.rate),
+      },
+      {
+        name: "Potato",
+        price: [54.72, 51.84, 0, 0].map((price) => price * country.rate),
       },
     ];
   }

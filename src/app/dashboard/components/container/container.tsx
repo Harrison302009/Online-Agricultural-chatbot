@@ -11,8 +11,14 @@ import {
   Legend,
 } from "chart.js";
 import { useAtom } from "jotai";
-import { userCount } from "@/app/prices/prices";
-import { useEffect } from "react";
+import {
+  Specifics,
+  TotalUsersHandle,
+  currencySymbol,
+  pricer,
+  userCount,
+} from "@/app/prices/prices";
+import { useEffect, useState } from "react";
 import { UserCounter } from "@/modules/user-count/actions";
 import { useSession } from "next-auth/react";
 import {
@@ -26,8 +32,17 @@ import {
   Skeleton,
   Card,
   Typography,
+  ListItemButton,
+  List,
+  ListItem,
+  ModalClose,
+  Badge,
+  Button,
 } from "@mui/joy";
 import { CldImage } from "next-cloudinary";
+import { TotalUsers } from "@/modules/users/actions";
+import { data } from "../countries/countries";
+import { TargetFetcher } from "@/modules/users/fetch-target/actions";
 
 // Register required components for Chart.js
 ChartJS.register(
@@ -40,16 +55,67 @@ ChartJS.register(
 );
 
 export default function AgriculturalDashboard() {
-  const [users, setUsers] = useAtom(userCount);
+  const [userNumber, setUserNumber] = useAtom(userCount);
+  const [price, setPrice] = useAtom(pricer);
+  const [users, setUsers] = useAtom(TotalUsersHandle);
+  const [targetSuccess, setTargetSuccess] = useState(false);
+  const [currency, setCurrency] = useAtom(currencySymbol);
+  const [targetUserInformation, setTargetUserInformation] = useState<Specifics>(
+    {
+      id: "",
+      role: "",
+      email: "",
+      password: "",
+      name: "",
+      image: "",
+      receivedMessage: false,
+      ApplicationStatus: "",
+      hasPendingApplications: false,
+      isBanned: false,
+      status: "",
+      plan: "",
+      lastLogin: new Date(),
+      emailVerified: new Date(),
+      phoneNumber: "",
+      bio: "",
+      age: 0,
+      gender: "",
+      occupation: "",
+      education: "",
+      country: "",
+      address: "",
+    },
+  );
+  const [drop, setDrop] = useState(false);
   const session = useSession();
   useEffect(() => {
     const fetchUserCount = async () => {
       const count = await UserCounter();
-      setUsers(count);
-      alert(count);
+      setUserNumber(count);
     };
     fetchUserCount();
-  }, [setUsers]);
+  }, [setUserNumber]);
+  const targetUserFetch = async (id: string) => {
+    const response: Specifics = await TargetFetcher(id);
+    setTargetUserInformation(response);
+    setTargetSuccess(true);
+  };
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await TotalUsers();
+      const userCountry = data.find(
+        (country) => country.country === session.data?.user.country,
+      );
+      if (userCountry && userCountry.price) {
+        setPrice(userCountry.price);
+        setCurrency(userCountry.symbol);
+      } else {
+        setPrice([]);
+      }
+      setUsers(response);
+    };
+    fetchUsers();
+  }, [setUsers, session.data?.user.country, setPrice, setCurrency]);
   const months = [
     "Jan",
     "Feb",
@@ -70,7 +136,7 @@ export default function AgriculturalDashboard() {
     datasets: [
       {
         label: "Wheat",
-        data: [10, 20, 15, 30, 25, 35],
+        data: price.find((item) => item.name === "Wheat")?.price,
         borderColor: "#81c784",
         backgroundColor: "rgba(129, 199, 132, 0.2)",
         borderWidth: 2,
@@ -78,9 +144,49 @@ export default function AgriculturalDashboard() {
       },
       {
         label: "Rice",
-        data: [15, 25, 20, 35, 30, 40],
+        data: price.find((item) => item.name === "Rice")?.price,
         borderColor: "#64b5f6",
         backgroundColor: "rgba(100, 181, 246, 0.2)",
+        borderWidth: 2,
+        pointRadius: 4,
+      },
+      {
+        label: "Sugar",
+        data: price.find((item) => item.name === "Sugar")?.price,
+        borderColor: "#fdd835",
+        backgroundColor: "rgba(253, 216, 53, 0.2)",
+        borderWidth: 2,
+        pointRadius: 4,
+      },
+      {
+        label: "Soybeans",
+        data: price.find((item) => item.name === "Soybeans")?.price,
+        borderColor: "#ef6c00",
+        backgroundColor: "rgba(239, 108, 0, 0.2)",
+        borderWidth: 2,
+        pointRadius: 4,
+      },
+      {
+        label: "Cotton",
+        data: price.find((item) => item.name === "Cotton")?.price,
+        borderColor: "rgb(97, 255, 181)",
+        backgroundColor: "rgba(97, 255, 181, 0.2)",
+        borderWidth: 2,
+        pointRadius: 4,
+      },
+      {
+        label: "Maize",
+        data: price.find((item) => item.name === "Maize")?.price,
+        borderColor: "rgb(25, 5, 51)",
+        backgroundColor: "rgba(25, 5, 51, 0.2)",
+        borderWidth: 2,
+        pointRadius: 4,
+      },
+      {
+        label: "Potato",
+        data: price.find((item) => item.name === "Potato")?.price,
+        borderColor: "rgb(17, 5, 88)",
+        backgroundColor: "rgba(17, 5, 88, 0.2)",
         borderWidth: 2,
         pointRadius: 4,
       },
@@ -89,6 +195,9 @@ export default function AgriculturalDashboard() {
 
   const options = {
     responsive: true,
+    tooltip: {
+      enabled: true,
+    },
     plugins: {
       legend: {
         position: "top" as const,
@@ -99,10 +208,24 @@ export default function AgriculturalDashboard() {
         grid: {
           display: false,
         },
+        title: {
+          display: true,
+          text: `Months`,
+          font: {
+            size: 14,
+          },
+        },
       },
       y: {
         grid: {
           color: "rgba(200, 200, 200, 0.2)",
+        },
+        title: {
+          display: true,
+          text: `${currency}/bushel`,
+          font: {
+            size: 14,
+          },
         },
       },
     },
@@ -161,6 +284,84 @@ export default function AgriculturalDashboard() {
           gap: 4,
         }}
       >
+        <Modal open={targetSuccess} onClose={() => setTargetSuccess(false)}>
+          <ModalDialog>
+            <ModalClose />
+            <Stack>
+              <Stack>
+                {targetUserInformation.image ? (
+                  <CldImage
+                    alt="pfp"
+                    src={targetUserInformation.image}
+                    height={150}
+                    width={150}
+                  />
+                ) : (
+                  <Avatar variant="soft" sx={{ height: 150, width: 150 }}>
+                    <Typography level="h1">
+                      {targetUserInformation.name
+                        ?.substring(0, 2)
+                        .toUpperCase()}
+                    </Typography>
+                  </Avatar>
+                )}
+                <Skeleton variant="text" loading={!targetUserInformation.name}>
+                  <Typography
+                    level="h1"
+                    textAlign="center"
+                    sx={{
+                      display: "flex",
+                      position: "relative",
+                      width: "100%",
+                    }}
+                  >
+                    {targetUserInformation.name}
+                  </Typography>
+                </Skeleton>
+                <Skeleton loading={!targetUserInformation.email} variant="text">
+                  <Typography level="title-lg">
+                    {targetUserInformation.phoneNumber} -{" "}
+                    {targetUserInformation.email}
+                  </Typography>
+                </Skeleton>
+                <Stack
+                  sx={{
+                    display: "flex",
+                    position: "relative",
+                    flexDirection: "row",
+                    gap: 1.2,
+                  }}
+                >
+                  <Skeleton
+                    loading={!targetUserInformation.country}
+                    variant="text"
+                  >
+                    <Typography level="title-md">
+                      {targetUserInformation.country}
+                    </Typography>
+                  </Skeleton>
+                  <br />
+                  <Skeleton
+                    variant="rectangular"
+                    sx={{
+                      display:
+                        targetUserInformation.country ===
+                          session.data?.user.country &&
+                        targetUserInformation.id !== session.data?.user.id
+                          ? "flex"
+                          : "none",
+                    }}
+                    loading={!targetUserInformation.name}
+                  >
+                    <Button variant="outlined">
+                      Contact {targetUserInformation.name}
+                    </Button>
+                  </Skeleton>
+                </Stack>
+              </Stack>
+            </Stack>
+          </ModalDialog>
+        </Modal>
         <Typography
           level="h1"
           sx={{
@@ -187,7 +388,13 @@ export default function AgriculturalDashboard() {
               backgroundColor: "#e3f2fd",
               borderRadius: "16px",
               boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)",
+              "&:hover": {
+                paddingBottom: 11,
+                transition: "all 0.3s ease-in-out",
+              },
             }}
+            onMouseOver={() => setDrop(true)}
+            onMouseLeave={() => setDrop(false)}
           >
             <CardHeader
               avatar={
@@ -196,13 +403,55 @@ export default function AgriculturalDashboard() {
                 </Avatar>
               }
               title="Total Users"
-              subheader={users && users >= 0 ? users : "Fetching..."}
+              subheader={
+                userNumber && userNumber >= 0 ? userNumber : "Fetching..."
+              }
             />
+            <Stack
+              sx={{
+                display: drop ? "flex" : "none",
+                position: "relative",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <List>
+                <ListItem>
+                  {users.map((user) => (
+                    <ListItemButton
+                      sx={{ borderRadius: 5 }}
+                      key={user.id}
+                      onClick={() => targetUserFetch(user.id)}
+                      variant="soft"
+                    >
+                      {user.image ? (
+                        <CldImage
+                          alt="pfp"
+                          src={user.image}
+                          height={100}
+                          width={100}
+                        />
+                      ) : (
+                        <Avatar
+                          size="lg"
+                          sx={{ bgcolor: "#988f8a" }}
+                          variant="soft"
+                        >
+                          {user.name?.substring(0, 2).toUpperCase()}
+                        </Avatar>
+                      )}
+                      <Typography level="h4">{user.name}</Typography>
+                    </ListItemButton>
+                  ))}
+                </ListItem>
+              </List>
+            </Stack>
           </Card>
           <Card
             sx={{
               flex: 1,
               minWidth: "250px",
+              maxHeight: "fit-content",
               backgroundColor: "#e8f5e9",
               borderRadius: "16px",
               boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)",
@@ -222,6 +471,7 @@ export default function AgriculturalDashboard() {
             sx={{
               flex: 1,
               minWidth: "250px",
+              maxHeight: "fit-content",
               backgroundColor: "#fff3e0",
               borderRadius: "16px",
               boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.1)",
@@ -252,7 +502,7 @@ export default function AgriculturalDashboard() {
               color: "#2e7d32",
             }}
           >
-            Crop Price Trends
+            Crop Price Trends - {new Date().getFullYear()}
           </Typography>
           <Line data={graph} options={options} />
         </Box>
