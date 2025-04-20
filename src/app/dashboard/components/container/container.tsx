@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import { useAtom } from "jotai";
 import {
+  AdminCapacity,
   Specifics,
   TotalUsersHandle,
   currencySymbol,
@@ -43,6 +44,7 @@ import { CldImage } from "next-cloudinary";
 import { TotalUsers } from "@/modules/users/actions";
 import { data } from "../countries/countries";
 import { TargetFetcher } from "@/modules/users/fetch-target/actions";
+import { RoleHandler } from "@/modules/role/actions";
 
 // Register required components for Chart.js
 ChartJS.register(
@@ -353,7 +355,17 @@ export default function AgriculturalDashboard() {
                     }}
                     loading={!targetUserInformation.name}
                   >
-                    <Button variant="outlined">
+                    <Button
+                      variant="outlined"
+                      sx={{
+                        display:
+                          targetUserInformation.country ===
+                            session.data?.user.country &&
+                          targetUserInformation.id !== session.data?.user.id
+                            ? "flex"
+                            : "none",
+                      }}
+                    >
                       Contact {targetUserInformation.name}
                     </Button>
                   </Skeleton>
@@ -435,8 +447,9 @@ export default function AgriculturalDashboard() {
                         <CldImage
                           alt="pfp"
                           src={user.image}
-                          height={100}
-                          width={100}
+                          height={45}
+                          width={45}
+                          style={{ borderRadius: "50%" }}
                         />
                       ) : (
                         <Avatar

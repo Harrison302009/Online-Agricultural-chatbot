@@ -44,7 +44,7 @@ model User {
     phoneNumber            String?
     country                String        @default("Unknown")
     address                String        @default("Unknown")
-    role                   String        @default("user")
+    role                   String        @default("student")
     status                 String        @default("offline")
     isBanned               Boolean       @default(false)
     plan                   String        @default("new")
