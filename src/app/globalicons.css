@@ -51,15 +51,16 @@
     justify-content: center;
 }
 .paystack {
-  display: flex;
-    background-size: 200% auto;
-    background-image: linear-gradient(-175deg, blue 0%, purple 100%);
-    align-items: center;
-    justify-content: center;
-    height: 37px;
-    border: transparent;
-    color: rgb(106, 106, 196);
-    font-family: monospace;
+  background-color: #10b981;
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.paystack:hover {
+  background-color: #059669;
 }
 .purchase:hover {
   display: flex;

@@ -29,6 +29,20 @@ export type Specifics = {
   address: string;
 };
 
+export const plans = atom<Price[]>([
+  {
+    name: "Free",
+    price: [0],
+  },
+  {
+    name: "Basic",
+    price: [12.99],
+  },
+  {
+    name: "Premium",
+    price: [49.99],
+  },
+]);
 export const styles = {
   container: { display: "flex", height: "100vh", backgroundColor: "#f9fafb" },
   sidebar: {

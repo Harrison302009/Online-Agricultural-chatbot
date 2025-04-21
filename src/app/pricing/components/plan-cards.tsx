@@ -145,26 +145,22 @@ export function PlanCard({
               width: "100%",
             }}
           >
-            {loaded ? (
-              <Typography
-                variant="h4"
-                sx={{
-                  fontFamily: "'Oswald', sans-serif",
-                  fontOpticalSizing: "auto",
-                  fontWeight: 700,
-                  fontStyle: "normal",
-                  backgroundImage:
-                    "linear-gradient(to bottom right, blue, purple)",
-                  backgroundClip: "text",
-                  color: "transparent",
-                }}
-              >
-                {symbol}
-                {price}
-              </Typography>
-            ) : (
-              <Skeleton variant="text" height={30} width={200}></Skeleton>
-            )}
+            <Typography
+              variant="h4"
+              sx={{
+                fontFamily: "'Oswald', sans-serif",
+                fontOpticalSizing: "auto",
+                fontWeight: 700,
+                fontStyle: "normal",
+                backgroundImage:
+                  "linear-gradient(to bottom right, blue, purple)",
+                backgroundClip: "text",
+                color: "transparent",
+              }}
+            >
+              {symbol}
+              {price}
+            </Typography>
             {loaded ? (
               <Typography
                 variant="h6"
