@@ -35,11 +35,11 @@ export default function SurveyContainer() {
   const router = useRouter();
   const [values, setValues] = useState({
     Answer1: "",
+    Answer2: "Select expert subject",
     Answer3: "",
     experiencelevel: "months",
     certificate: "",
     Answer4: "Select an educational level",
-    Answer2: "Select expert subject",
     Answer6: "",
     Answer5: "",
     Answer8: "",
@@ -606,7 +606,7 @@ export default function SurveyContainer() {
                   required
                   sx={{ width: "100%" }}
                   variant="soft"
-                  placeholder="What copntributions have you made to the world of agriculture?"
+                  placeholder="What contributions have you made to the world of agriculture?"
                   onChange={(d) =>
                     setValues({ ...values, Answer9: d.target.value })
                   }

@@ -18,11 +18,15 @@ import { prisma } from "@/modules/prisma/lib/prisma-client/prisma-client";
 import React, { useState, useEffect } from "react";
 import { TotalUsers } from "@/modules/users/actions";
 import { CheckCircleRounded } from "@mui/icons-material";
-import { styles } from "@/app/prices/prices";
+import { Application, ModalPopup, styles } from "@/app/prices/prices";
 import { CldImage } from "next-cloudinary";
 import { SpecificUserRole } from "@/modules/role/target-role/actions";
 import { useRouter } from "next/navigation";
 import SideBar from "@/components/sidebar/sidebar";
+import UserApplication from "@/components/user-display/user-display";
+import { useAtom } from "jotai";
+import { ApplicationFetcher } from "@/modules/application-fetcher/actions";
+import { AppStatus } from "@prisma/client";
 
 interface UserProps {
   id: string;
@@ -32,14 +36,23 @@ interface UserProps {
   country: string | null;
   phoneNumber: string | null;
   image: string | null;
+  hasPendingApplications: boolean;
+  ApplicationStatus: AppStatus;
 }
 
 const UsersContainer = () => {
   const { data: session } = useSession();
   const [users, setUsers] = useState<UserProps[]>([]);
+  const [userApp, setUserApp] = useAtom(Application);
+  const [open, setOpen] = useAtom(ModalPopup);
   const [copied, setCopied] = useState(false);
-  const [role, setRole] = useState("");
-  const router = useRouter();
+  const [name, setName] = useState("");
+  const [id, setId] = useState("");
+  const appFetcher = async (id: string) => {
+    const results = await ApplicationFetcher(id);
+    setUserApp(results);
+    setOpen(true);
+  };
   useEffect(() => {
     if (session?.user.role !== "admin") return;
     (async () => {
@@ -53,6 +66,8 @@ const UsersContainer = () => {
           country: user.country,
           phoneNumber: user.phoneNumber,
           image: user.image,
+          hasPendingApplications: user.hasPendingApplications,
+          ApplicationStatus: user.ApplicationStatus,
         })),
       );
     })();
@@ -80,6 +95,24 @@ const UsersContainer = () => {
             ID Succesfully Copied To Clipboard
           </Typography>
         </Snackbar>
+        <UserApplication
+          open={open}
+          id={id}
+          close={() => setOpen(false)}
+          examId={`${userApp?.examId}`}
+          applicant={name}
+          Answer1={`${userApp?.Answer1}`}
+          Answer2={`${userApp?.Answer2}`}
+          Answer3={`${userApp?.Answer3}`}
+          Answer4={`${userApp?.Answer4}`}
+          Answer5={`${userApp?.Answer5}`}
+          Answer6={`${userApp?.Answer6}`}
+          Answer7={`${userApp?.Answer7}`}
+          Answer8={`${userApp?.Answer8}`}
+          Answer9={`${userApp?.Answer9}`}
+          Answer10={`${userApp?.Answer10}`}
+          certificate={`${userApp?.Certificate}`}
+        />
         <SideBar />
         <Stack sx={styles.main}>
           <Card>
@@ -112,7 +145,12 @@ const UsersContainer = () => {
                             draggable={false}
                           />
                         </td>
-                        <td>{user.name}</td>
+                        <td>
+                          {user.name}(
+                          {user.role === "Agricultural Researcher" &&
+                            user.ApplicationStatus}
+                          )
+                        </td>
                         <td>{user.role}</td>
                         <td>{user.country}</td>
                         <td>{user.phoneNumber}</td>
@@ -137,6 +175,20 @@ const UsersContainer = () => {
                           >
                             Make {user.role === "student" ? "Admin" : "Student"}
                           </Button>
+                        </td>
+                        <td>
+                          {user.role === "Agricultural Researcher" &&
+                            user.hasPendingApplications === true && (
+                              <Button
+                                onClick={() => {
+                                  appFetcher(user.id);
+                                  setName(`${user.name}`);
+                                  setId(`${user.id}`);
+                                }}
+                              >
+                                View App
+                              </Button>
+                            )}
                         </td>
                       </tr>
                     ))}

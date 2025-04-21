@@ -34,6 +34,13 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum AppStatus {
+    NEUTRAL
+    PENDING
+    DECLINED
+    APPROVED
+}
+
 model User {
     id                     String        @id @default(cuid())
     name                   String?
@@ -50,7 +57,7 @@ model User {
     plan                   String        @default("new")
     receivedMessage        Boolean       @default(false)
     hasPendingApplications Boolean       @default(false)
-    ApplicationStatus      String?
+    ApplicationStatus      AppStatus     @default(NEUTRAL)
     emailVerified          DateTime?
     image                  String?       @default("vdivydqbavnnlidtxavz")
     accounts               Account[]
@@ -105,18 +112,18 @@ model RegisteredUsers {
 
 model Exam {
     examId      String  @id @default(cuid())
-    userId      String?
-    user        User?   @relation(fields: [userId], references: [id])
-    Answer1     String?
-    Certificate String?
-    Answer2     String?
-    Answer3     String?
-    Answer4     String?
-    Answer5     String?
-    Answer6     String?
-    Answer7     String?
-    Answer8     String?
-    Answer9     String?
-    Answer10    String?
-    score       Float?
+    userId      String
+    user        User   @relation(fields: [userId], references: [id])
+    Answer1     String
+    Certificate String
+    Answer2     String
+    Answer3     String
+    Answer4     String
+    Answer5     String
+    Answer6     String
+    Answer7     String
+    Answer8     String
+    Answer9     String
+    Answer10    String
+    score       Float
 }

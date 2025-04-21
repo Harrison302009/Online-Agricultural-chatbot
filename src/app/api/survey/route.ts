@@ -48,6 +48,7 @@ export const POST = async (req: NextRequest) => {
       Answer9,
       Answer10,
       Certificate: certificate,
+      score: 0,
     },
   });
   await prisma.user.update({
@@ -80,7 +81,7 @@ export const DELETE = async () => {
   await prisma.exam.deleteMany();
   await prisma.user.updateMany({
     where: { hasPendingApplications: true, ApplicationStatus: "PENDING" },
-    data: { hasPendingApplications: false, ApplicationStatus: "" },
+    data: { hasPendingApplications: false, ApplicationStatus: "NEUTRAL" },
   });
   setTimeout(async () => {
     const display = await prisma.user.findMany({

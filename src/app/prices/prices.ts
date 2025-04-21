@@ -4,6 +4,22 @@ type Price = {
   name: string;
   price: number[];
 };
+
+type userExam = {
+  examId: string;
+  userId: string;
+  Answer1: string;
+  Answer2: string;
+  Answer3: string;
+  Answer4: string;
+  Answer5: string;
+  Answer6: string;
+  Answer7: string;
+  Answer8: string;
+  Answer9: string;
+  Answer10: string;
+  Certificate: string;
+} | null;
 export type Specifics = {
   id: string;
   role: string;
@@ -114,3 +130,6 @@ export const userCount = atom<number>(0);
 
 export const TotalUsersHandle = atom<Specifics[]>([]);
 export const AdminCapacity = atom<boolean>(false);
+export const ModalPopup = atom<boolean>(false);
+
+export const Application = atom<userExam>();

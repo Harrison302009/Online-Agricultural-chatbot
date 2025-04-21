@@ -1,3 +1,4 @@
+import { AppStatus } from "@prisma/client";
 import NextAuth from "next-auth";
 
 declare module "next-auth" {
@@ -14,8 +15,8 @@ declare module "next-auth" {
       image: string;
       /** If the user has messages he/she has not received but not read */
       receivedMessage: boolean;
-      /**The satus of the user's application */
-      ApplicationStatus?: string;
+      /**The status of the user's application */
+      ApplicationStatus: AppStatus;
       /**Whether or not the user has ever submitted an application */
       hasPendingApplications: boolean;
       /** The user's status (either true or false) */

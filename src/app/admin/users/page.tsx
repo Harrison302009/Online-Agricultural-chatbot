@@ -4,6 +4,9 @@ import UsersContainer from "../components/users-container/users-container";
 
 export default async function Users() {
   const session = await getServerSession();
+  if (!session) {
+    redirect("/auth/login");
+  }
   if (session.user.role !== "admin") {
     redirect("/dashboard");
   }

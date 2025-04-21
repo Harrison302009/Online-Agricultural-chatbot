@@ -83,6 +83,7 @@ export default function SideBar() {
       <div style={styles.footer}>
         <button
           style={styles.logoutButton}
+          onClick={() => router.push("/auth/logout")}
           onMouseOver={(e) =>
             (e.currentTarget.style.backgroundColor =
               styles.logoutButtonHover.backgroundColor)
