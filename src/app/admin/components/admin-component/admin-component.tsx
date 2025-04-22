@@ -9,7 +9,6 @@ export default function AdminContainer() {
       <div style={styles.container}>
         {/* Sidebar */}
         <SideBar />
-
         {/* Main Content */}
         <main style={styles.main}>
           <Stack style={styles.header}>

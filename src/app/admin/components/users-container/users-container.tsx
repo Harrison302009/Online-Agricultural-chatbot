@@ -145,12 +145,7 @@ const UsersContainer = () => {
                             draggable={false}
                           />
                         </td>
-                        <td>
-                          {user.name}(
-                          {user.role === "Agricultural Researcher" &&
-                            user.ApplicationStatus}
-                          )
-                        </td>
+                        <td>{user.name}</td>
                         <td>{user.role}</td>
                         <td>{user.country}</td>
                         <td>{user.phoneNumber}</td>
