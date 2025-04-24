@@ -47,7 +47,13 @@ export default function SettingsContainer({
           justifyContent: "center",
         }}
       >
-        <Stack sx={{ display: "flex", position: "relative", width: "50%" }}>
+        <Stack
+          sx={{
+            display: "flex",
+            position: "relative",
+            width: { xs: "90%", sm: "90%", md: "50%", lg: "50%", xl: "50%" },
+          }}
+        >
           <Card
             sx={{
               resize: "horizontal",
@@ -127,7 +133,13 @@ export default function SettingsContainer({
             <br />
             <Stack
               sx={{
-                display: "flex",
+                display: {
+                  xs: "none",
+                  sm: "flex",
+                  md: "flex",
+                  lg: "flex",
+                  xl: "flex",
+                },
                 position: "relative",
                 flexDirection: "row",
               }}
@@ -167,6 +179,30 @@ export default function SettingsContainer({
                   {phone}
                 </Typography>
               </Stack>
+            </Stack>
+            <Stack
+              sx={{
+                display: {
+                  xs: "flex",
+                  sm: "none",
+                  md: "none",
+                  lg: "none",
+                  xl: "none",
+                },
+              }}
+            >
+              <Typography level="title-md" sx={{ color: "#d0d1d2" }}>
+                Join Date: {new Date(joined).toDateString()}
+              </Typography>
+              <Typography level="title-md" sx={{ color: "#d0d1d2" }}>
+                Last Seen: {new Date(lastSeen).toDateString()}
+              </Typography>
+              <Typography level="title-md" sx={{ color: "#d0d1d2" }}>
+                Country: {country}
+              </Typography>
+              <Typography level="title-md" sx={{ color: "#d0d1d2" }}>
+                Role: {role}
+              </Typography>
             </Stack>
           </Card>
         </Stack>
