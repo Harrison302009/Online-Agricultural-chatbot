@@ -86,13 +86,25 @@ model Message {
     owner     User?     @relation(fields: [ownerId], references: [id])
 }
 
+model ChatRoom {
+    id        String    @id @default(cuid())
+    createdAt DateTime  @default(now())
+    updatedAt DateTime? @updatedAt
+    name      String    @unique
+
+    messages ChatMessage[]
+}
+
 model ChatMessage {
-    id        Int      @id @default(autoincrement())
-    message   String
-    image     String?
-    createdAt DateTime @default(now())
-    ownerId   String?
-    owner     User?    @relation(fields: [ownerId], references: [id])
+    id         Int       @id @default(autoincrement())
+    message    String
+    image      String?
+    createdAt  DateTime  @default(now())
+    ownerId    String?
+    chatRoomId String?
+    
+    owner      User?     @relation(fields: [ownerId], references: [id])
+    ChatRoom   ChatRoom? @relation(fields: [chatRoomId], references: [id])
 }
 
 model MessageSent {
@@ -111,7 +123,7 @@ model RegisteredUsers {
 }
 
 model Exam {
-    examId      String  @id @default(cuid())
+    examId      String @id @default(cuid())
     userId      String
     user        User   @relation(fields: [userId], references: [id])
     Answer1     String

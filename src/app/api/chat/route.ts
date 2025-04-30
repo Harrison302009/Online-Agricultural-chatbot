@@ -34,6 +34,7 @@ export const POST = async (req: Request) => {
       message: messageInput.message,
       ownerId: session.user.id,
       image: session.user.image || "new-user_enkjde",
+      chatRoomId: messageInput.chatroomId || null,
     },
   });
 
@@ -43,7 +44,10 @@ export const POST = async (req: Request) => {
     },
   });
 
-  await pusher.trigger("chat", "message", {
+  const channelName = messageInput.chatroomId
+    ? `chat-${messageInput.chatroomId}`
+    : "chat";
+  await pusher.trigger(channelName, "message", {
     ...messageInput,
     username: user?.username,
     createdAt: savedMessage.createdAt,
@@ -71,11 +75,20 @@ export interface GetAllChatMessagesResponse {
     createdAt: Date;
     ownerId: string | null;
     image: string;
+    chatRoomId: string | null;
   })[];
 }
 
 export const GET = async (req: Request) => {
+  const url = new URL(req.url);
+  const chatroomId = url.searchParams.get("chatroomId");
+
   const messages = await prisma.chatMessage.findMany({
+    where: chatroomId
+      ? {
+          chatRoomId: chatroomId,
+        }
+      : {},
     include: {
       owner: true,
     },

@@ -25,7 +25,16 @@ const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
   cluster: "mt1",
 });
 
-export default function Container() {
+interface Chatroom {
+  id: string;
+  name: string;
+}
+
+interface ContainerProps {
+  chatroom: Chatroom | null;
+}
+
+export default function Container({ chatroom }: ContainerProps) {
   const session = useSession();
   const [messages, setMessages] = useState<
     GetAllChatMessagesResponse["messages"]
@@ -39,7 +48,7 @@ export default function Container() {
   const router = useRouter();
 
   const { data: databaseChatMessages, mutate: refetchDbMessages } =
-    useAllChatMessages();
+    useAllChatMessages(chatroom?.id);
 
   console.log("@@ databaseChatMessages", databaseChatMessages);
   console.log(
@@ -81,7 +90,8 @@ export default function Container() {
     setOpen(false);
   };
   useEffect(() => {
-    const channel = pusher.subscribe("chat");
+    const channelName = chatroom ? `chat-${chatroom.id}` : "chat";
+    const channel = pusher.subscribe(channelName);
 
     channel.bind(
       "message",
@@ -113,7 +123,7 @@ export default function Container() {
       channel.unbind_all();
       channel.unsubscribe();
     };
-  }, [router, session.data?.user.id, session.data?.user.image]);
+  }, [router, session.data?.user.id, session.data?.user.image, chatroom]);
   useEffect(() => {
     async function Update() {
       if (!session.data?.user) {
@@ -334,6 +344,7 @@ export default function Container() {
                   body: JSON.stringify({
                     message: input,
                     email: session.data?.user?.email || "harrisjohnu@gmail.com",
+                    chatroomId: chatroom?.id,
                   }),
                 });
                 setInput("");
@@ -384,6 +395,7 @@ export default function Container() {
                         message: input,
                         email:
                           session.data?.user?.email || "harrisjohnu@gmail.com",
+                        chatroomId: chatroom?.id,
                       }),
                     });
                     setInput("");
