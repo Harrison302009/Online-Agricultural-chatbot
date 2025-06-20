@@ -513,11 +513,13 @@ data.forEach((country) => {
     country.price = [
       {
         name: "Wheat",
-        price: [5.48, 5.43, 5.33, 5.1].map((price) => price * country.rate),
+        price: [5.52, 5.52, 5.5, 5.45, 5.4, 5.73].map(
+          (price) => price * country.rate,
+        ),
       },
       {
         name: "Rice",
-        price: [14.68, 13.67, 13.35, 13.04].map(
+        price: [6.84, 6.78, 6.39, 6.1, 5.85, 6.08].map(
           (price) => price * country.rate,
         ),
       },

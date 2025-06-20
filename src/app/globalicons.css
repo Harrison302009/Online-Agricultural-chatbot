@@ -283,6 +283,7 @@ option {
   position: relative;
   background-color: #aaa;
   border: 1px solid #000;
+  color: #94f787;
   height: 50px;
   flex-direction: row;
 }
