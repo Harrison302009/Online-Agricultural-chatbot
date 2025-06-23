@@ -109,7 +109,11 @@ export default function CropMonitorContainer() {
                     >
                       <CardOverflow>
                         <AspectRatio objectFit="fill">
-                          <img src={crop.image} alt={crop.name} />
+                          <img
+                            src={crop.image}
+                            alt={crop.name}
+                            draggable={false}
+                          />
                         </AspectRatio>
                       </CardOverflow>
                       <CardContent>
