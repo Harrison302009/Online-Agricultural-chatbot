@@ -62,6 +62,7 @@ export default function AgriculturalDashboard() {
   const [users, setUsers] = useAtom(TotalUsersHandle);
   const [targetSuccess, setTargetSuccess] = useState(false);
   const [currency, setCurrency] = useAtom(currencySymbol);
+  const [temperature, setTemperature] = useState("");
   const [targetUserInformation, setTargetUserInformation] = useState<Specifics>(
     {
       id: "",
@@ -118,6 +119,21 @@ export default function AgriculturalDashboard() {
     };
     fetchUsers();
   }, [setUsers, session.data?.user.country, setPrice, setCurrency]);
+  useEffect(() => {
+    const fetchTemp = async () => {
+      const APIContact = await fetch(
+        "https://aiculture-app-api.onrender.com/get_temperature",
+        {
+          method: "GET",
+        },
+      );
+      const data = await APIContact.json();
+      if (APIContact.ok) {
+        setTemperature(data);
+      }
+    };
+    fetchTemp();
+  }, []);
   const months = [
     "Jan",
     "Feb",
@@ -554,7 +570,7 @@ export default function AgriculturalDashboard() {
               color: "#37474f",
             }}
           >
-            Current temperature: 25°C
+            Current temperature: {temperature}
           </Typography>
         </Box>
       </Box>
