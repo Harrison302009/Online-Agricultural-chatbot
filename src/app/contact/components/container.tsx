@@ -9,17 +9,19 @@ import {
   Textarea,
   Typography,
 } from "@mui/joy";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export default function Container() {
-  const [userinfo, setUserInfo] = useState({
+  const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
     message: "",
     id: "",
   });
   const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [message, setMessage] = useState("");
+  const session = useSession();
   useEffect(() => {
     const fetchUserData = async () => {
       const response = await fetch("/api/user", {
@@ -35,6 +37,20 @@ export default function Container() {
     };
     fetchUserData();
   });
+  const transactData = async (event: any) => {
+    event.preventDefault();
+    await fetch("/api/communicator", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: session.data?.user.name,
+        email: session.data?.user.email,
+        message,
+      }),
+    })
+      .then(() => window.location.reload())
+      .catch((err) => console.log(`Failed to upload. Responded with ${err}`));
+  };
   return (
     <CssVarsProvider>
       <Stack sx={{ height: "100vh", width: "100%" }}>
@@ -78,14 +94,14 @@ export default function Container() {
             Lay your complaints
           </Typography>
           <br />
-          <form action="">
+          <form action="" onSubmit={(e) => transactData(e)}>
             <Grid container spacing={2} sx={{ flexGrow: 1 }}>
               <Grid xs={6} md={6} lg={6}>
                 <FormLabel>First Name</FormLabel>
                 <Input
                   placeholder="First Name"
                   variant="soft"
-                  value={userinfo.name.split(" ")[1]}
+                  value={userInfo.name.split(" ")[1]}
                 />
               </Grid>
               <Grid xs={6} md={6} lg={6}>
@@ -93,7 +109,7 @@ export default function Container() {
                 <Input
                   placeholder="Last Name"
                   variant="soft"
-                  value={userinfo.name.split(" ")[2]}
+                  value={userInfo.name.split(" ")[2]}
                 />
               </Grid>
               <Grid xs={6} md={6} lg={12}>
@@ -101,11 +117,17 @@ export default function Container() {
                 <Input
                   placeholder="Email"
                   variant="soft"
-                  value={userinfo.email}
+                  value={userInfo.email}
                 />
               </Grid>
               <Grid xs={6} md={6} lg={12}>
-                <Textarea placeholder="Message" variant="soft" minRows={3} />
+                <Textarea
+                  placeholder="Message"
+                  variant="soft"
+                  minRows={3}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
               </Grid>
             </Grid>
             <br />
@@ -118,7 +140,7 @@ export default function Container() {
                 width: "100%",
               }}
             >
-              <Button variant="soft" color="danger">
+              <Button variant="soft" color="danger" type="submit">
                 Submit
               </Button>
             </Stack>
