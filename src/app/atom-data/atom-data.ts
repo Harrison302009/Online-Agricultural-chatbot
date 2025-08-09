@@ -45,6 +45,12 @@ export type Specifics = {
   address: string;
 };
 
+type Weather = {
+  latitude: number;
+  longitude: number;
+  altitude: number;
+};
+
 export const plans = atom<Price[]>([
   {
     name: "Free",
@@ -133,3 +139,9 @@ export const AdminCapacity = atom<boolean>(false);
 export const ModalPopup = atom<boolean>(false);
 
 export const Application = atom<userExam>();
+export const weatherState = atom<Weather>({
+  latitude: 0,
+  longitude: 0,
+  altitude: 0,
+});
+export const temperatureType = atom<number>(25);

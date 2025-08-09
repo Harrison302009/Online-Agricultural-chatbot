@@ -17,8 +17,10 @@ import {
   TotalUsersHandle,
   currencySymbol,
   pricer,
+  temperatureType,
   userCount,
-} from "@/app/prices/prices";
+  weatherState,
+} from "@/app/atom-data/atom-data";
 import { useEffect, useState } from "react";
 import { UserCounter } from "@/modules/user-count/actions";
 import { useSession } from "next-auth/react";
@@ -56,13 +58,18 @@ ChartJS.register(
   Legend,
 );
 
-export default function AgriculturalDashboard() {
+export default function AgriculturalDashboard({
+  weather,
+}: {
+  weather: string;
+}) {
   const [userNumber, setUserNumber] = useAtom(userCount);
   const [price, setPrice] = useAtom(pricer);
   const [users, setUsers] = useAtom(TotalUsersHandle);
   const [targetSuccess, setTargetSuccess] = useState(false);
   const [currency, setCurrency] = useAtom(currencySymbol);
-  const [temperature, setTemperature] = useState("");
+  const [weatherInfo, setWeatherInfo] = useAtom(weatherState);
+  const [temperature, setTemperature] = useAtom(temperatureType);
   const [targetUserInformation, setTargetUserInformation] = useState<Specifics>(
     {
       id: "",
@@ -121,19 +128,42 @@ export default function AgriculturalDashboard() {
   }, [setUsers, session.data?.user.country, setPrice, setCurrency]);
   useEffect(() => {
     const fetchTemp = async () => {
-      const APIContact = await fetch(
-        "https://aiculture-app-api.onrender.com/get_temperature",
-        {
-          method: "GET",
-        },
-      );
-      const data = await APIContact.json();
-      if (APIContact.ok) {
-        setTemperature(data);
+      if (
+        weatherInfo &&
+        weatherInfo.altitude > 0 &&
+        weatherInfo.longitude > 0 &&
+        weatherInfo.latitude > 0
+      ) {
+        const APIContact = await fetch(
+          "https://defang-aiculture-api.com/weather",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(weatherInfo),
+          },
+        );
+        if (APIContact.ok) {
+          const data = await APIContact.json();
+          setTemperature(data);
+        } else {
+          console.error(
+            `Failed to fetch. Server responded with ${
+              APIContact.status
+            } and ${APIContact.text()}`,
+          );
+        }
       }
     };
-    fetchTemp();
-  }, []);
+    navigator.geolocation.getCurrentPosition((position) => {
+      setWeatherInfo({
+        ...weatherInfo,
+        latitude: position.coords.latitude,
+        altitude: position.coords.altitude || 1,
+        longitude: position.coords.longitude,
+      });
+      fetchTemp();
+    });
+  }, [setWeatherInfo, weatherInfo, setTemperature]);
   const months = [
     "Jan",
     "Feb",
@@ -570,7 +600,7 @@ export default function AgriculturalDashboard() {
               color: "#37474f",
             }}
           >
-            Current temperature: {temperature}
+            Current temperature: {weather}
           </Typography>
         </Box>
       </Box>

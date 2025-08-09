@@ -1,4 +1,4 @@
-import { styles } from "@/app/prices/prices";
+import { styles } from "@/app/atom-data/atom-data";
 import { useRouter } from "next/navigation";
 
 export default function SideBar() {

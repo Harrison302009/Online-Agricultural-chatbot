@@ -18,7 +18,7 @@ import { prisma } from "@/modules/prisma/lib/prisma-client/prisma-client";
 import React, { useState, useEffect } from "react";
 import { TotalUsers } from "@/modules/users/actions";
 import { CheckCircleRounded } from "@mui/icons-material";
-import { Application, ModalPopup, styles } from "@/app/prices/prices";
+import { Application, ModalPopup, styles } from "@/app/atom-data/atom-data";
 import { CldImage } from "next-cloudinary";
 import { SpecificUserRole } from "@/modules/role/target-role/actions";
 import { useRouter } from "next/navigation";

@@ -1,6 +1,6 @@
 "use client";
 import { data } from "@/app/dashboard/components/countries/countries";
-import { currencySymbol } from "@/app/prices/prices";
+import { currencySymbol } from "@/app/atom-data/atom-data";
 import { useAtom } from "jotai";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";

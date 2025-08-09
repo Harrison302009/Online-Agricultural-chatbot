@@ -1,5 +1,5 @@
 "use client";
-import { styles } from "@/app/prices/prices";
+import { styles } from "@/app/atom-data/atom-data";
 import SideBar from "@/components/sidebar/sidebar";
 import { Box, Card, CssVarsProvider, Stack, Typography } from "@mui/joy";
 
