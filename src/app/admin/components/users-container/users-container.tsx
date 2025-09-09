@@ -11,17 +11,14 @@ import {
   Table,
   Typography,
 } from "@mui/joy";
-import { CardHeader, Select, MenuItem } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import CardHeader from "@mui/material/CardHeader";
 import { useSession } from "next-auth/react";
-import { prisma } from "@/modules/prisma/lib/prisma-client/prisma-client";
 import React, { useState, useEffect } from "react";
 import { TotalUsers } from "@/modules/users/actions";
 import { CheckCircleRounded } from "@mui/icons-material";
 import { Application, ModalPopup, styles } from "@/app/atom-data/atom-data";
 import { CldImage } from "next-cloudinary";
 import { SpecificUserRole } from "@/modules/role/target-role/actions";
-import { useRouter } from "next/navigation";
 import SideBar from "@/components/sidebar/sidebar";
 import UserApplication from "@/components/user-display/user-display";
 import { useAtom } from "jotai";

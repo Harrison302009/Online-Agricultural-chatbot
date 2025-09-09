@@ -1,11 +1,11 @@
 import {
-  Avatar,
   CircularProgress,
   CssVarsProvider,
   Modal,
   ModalDialog,
   Typography,
 } from "@mui/joy";
+import Avatar from "@mui/joy/Avatar";
 import { useSession } from "next-auth/react";
 import { CldImage } from "next-cloudinary";
 

@@ -2,16 +2,14 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import Pusher from "pusher-js";
-import {
-  Avatar,
-  Box,
-  Drawer,
-  IconButton,
-  Stack,
-  Typography,
-  TextField,
-  Button,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
 import { useSession } from "next-auth/react";
 import { useAllChatMessages } from "@/modules/chat/hooks/use-all-chat-messages/use-all-chat-messages";
 import { DeleteOutline, EmojiEmotionsRounded, Send } from "@mui/icons-material";
@@ -57,13 +55,13 @@ export default function Container() {
                     data: { url: "/chat" },
                     badge: "/Samp.png",
                     requireInteraction: true,
-                  },
+                  }
                 );
               });
             }
           }
         }
-      },
+      }
     );
 
     return () => {
@@ -88,7 +86,7 @@ export default function Container() {
   useEffect(() => {
     chatContainerRef.current?.scrollTo(
       0,
-      chatContainerRef.current.scrollHeight,
+      chatContainerRef.current.scrollHeight
     );
   }, [messages]);
 
@@ -233,7 +231,7 @@ export default function Container() {
             value={input}
             onChange={(e) => {
               setInput(
-                e.target.value.replace(/:\)/g, "😀").replace(/:\(/g, "😟"),
+                e.target.value.replace(/:\)/g, "😀").replace(/:\(/g, "😟")
               );
             }}
             InputProps={{

@@ -1,5 +1,5 @@
 "use client";
-import { CardHeader } from "@mui/material";
+import CardHeader from "@mui/material/CardHeader";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -29,7 +29,6 @@ import {
   ModalDialog,
   Modal,
   CircularProgress,
-  Avatar,
   Box,
   Stack,
   Skeleton,
@@ -42,6 +41,7 @@ import {
   Badge,
   Button,
 } from "@mui/joy";
+import Avatar from "@mui/joy/Avatar"
 import { CldImage } from "next-cloudinary";
 import { TotalUsers } from "@/modules/users/actions";
 import { data } from "../countries/countries";
@@ -57,6 +57,14 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
+
+export type User = {
+  id: string;
+  email: string;
+  name: string;
+  country: string;
+  image: string;
+};
 
 export default function AgriculturalDashboard({
   weather,

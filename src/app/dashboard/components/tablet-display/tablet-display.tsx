@@ -1,11 +1,9 @@
-import {
-  Avatar,
-  Drawer,
-  Skeleton,
-  Stack,
-  SwipeableDrawer,
-  Typography,
-} from "@mui/material";
+import Drawer from "@mui/material/Drawer";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import Avatar from "@mui/material/Avatar";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useState, useEffect } from "react";

@@ -1,12 +1,10 @@
 "use client";
-import {
-  Avatar,
-  Drawer,
-  Skeleton,
-  Stack,
-  SwipeableDrawer,
-  Typography,
-} from "@mui/material";
+import Drawer from "@mui/material/Drawer";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
+import Avatar from "@mui/material/Avatar";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { data } from "../countries/countries";

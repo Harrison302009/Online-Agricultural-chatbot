@@ -57,7 +57,7 @@ model User {
     plan                   String        @default("new")
     receivedMessage        Boolean       @default(false)
     hasPendingApplications Boolean       @default(false)
-    ApplicationStatus      String?
+    ApplicationStatus      AppStatus     @default(NEUTRAL)
     seenNotifications      Int           @default(0)
     emailVerified          DateTime?
     image                  String?       @default("inc9foypm6vykbdcdqya")

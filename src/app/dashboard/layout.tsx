@@ -1,5 +1,7 @@
 "use client";
-import { Button, Container, Stack } from "@mui/material";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
 import Link from "next/link";
 import { ReactNode } from "react";
 

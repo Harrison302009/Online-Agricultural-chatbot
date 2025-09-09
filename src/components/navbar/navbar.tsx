@@ -1,4 +1,5 @@
-import { Stack, Button } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 import router from "next/router";
 import { useEffect } from "react";
 import Link from "next/link";

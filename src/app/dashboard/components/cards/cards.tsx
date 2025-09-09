@@ -1,13 +1,9 @@
 "use client";
-import {
-  Avatar,
-  CardActionArea,
-  Paper,
-  Skeleton,
-  Typography,
-  Card,
-  Stack,
-} from "@mui/material";
+import Paper from "@mui/material/Paper";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
 import "../../../globalicons.css";
 import { useState } from "react";
 import Image from "next/image";

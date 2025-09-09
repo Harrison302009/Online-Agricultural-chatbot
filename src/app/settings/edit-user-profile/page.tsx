@@ -1,20 +1,18 @@
 "use client";
 import { Mice } from "@/components/mice/mouse";
 import { NavBar } from "@/components/navbar/navbar";
-import {
-  Box,
-  Button,
-  Stack,
-  Typography,
-  TextField,
-  Backdrop,
-  CircularProgress,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Avatar,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Avatar from "@mui/material/Avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { faUser } from "@fortawesome/free-regular-svg-icons";

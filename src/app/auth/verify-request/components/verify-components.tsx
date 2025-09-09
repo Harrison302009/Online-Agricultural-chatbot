@@ -1,6 +1,6 @@
 "use client";
-import { Box, Stack, Typography } from "@mui/material";
-import Image from "next/image";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import "../../../globalicons.css";
 
 export default function Container() {

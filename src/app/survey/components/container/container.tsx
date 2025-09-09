@@ -15,10 +15,10 @@ import {
   Box,
   Stack,
   Typography,
-  Avatar,
   Checkbox,
   Snackbar,
 } from "@mui/joy";
+import Avatar from "@mui/joy/Avatar";
 import { useSession } from "next-auth/react";
 import { CheckBoxOutlined, ThumbUpSharp } from "@mui/icons-material";
 import { useRouter } from "next/navigation";

@@ -4,7 +4,6 @@ import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { CheckCircleOutline, WarningAmberRounded } from "@mui/icons-material";
 import {
-  Avatar,
   Box,
   Button,
   CircularProgress,
@@ -18,6 +17,7 @@ import {
   Stack,
   Typography,
 } from "@mui/joy";
+import Avatar from "@mui/joy/Avatar";
 import { useSession } from "next-auth/react";
 import { CldImage } from "next-cloudinary";
 import { redirect, useRouter } from "next/navigation";

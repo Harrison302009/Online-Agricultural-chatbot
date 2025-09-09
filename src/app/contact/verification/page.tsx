@@ -1,5 +1,8 @@
 "use client";
-import { Box, LinearProgress, Stack, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import LinearProgress from "@mui/material/LinearProgress";
 import { useNavigation } from "react-router-dom";
 import { useRouter } from "next/navigation";
 import Image from "next/image";

@@ -1,10 +1,9 @@
 "use client";
-import { Box, Stack } from "@mui/material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import Button from "@mui/joy/Button";
 import "../../../../globalicons.css";
-import { Checkbox, Input, Link, Snackbar, Typography } from "@mui/joy";
-import { CssVarsProvider } from "@mui/joy/styles";
-import { extendTheme } from "@mui/joy/styles";
+import { Checkbox, Input, Link, Snackbar, Typography, CssVarsProvider, extendTheme } from "@mui/joy";
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -1,6 +1,7 @@
 "use client";
 
-import { Stack, Typography } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";

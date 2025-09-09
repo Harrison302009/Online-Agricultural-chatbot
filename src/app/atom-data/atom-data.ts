@@ -5,20 +5,20 @@ type Price = {
   price: number[];
 };
 
-type userExam = {
+export type userExam = {
   examId: string;
-  userId: string;
-  Answer1: string;
-  Answer2: string;
-  Answer3: string;
-  Answer4: string;
-  Answer5: string;
-  Answer6: string;
-  Answer7: string;
-  Answer8: string;
-  Answer9: string;
-  Answer10: string;
-  Certificate: string;
+  userId: string | null;
+  Answer1: string | null;
+  Answer2: string | null;
+  Answer3: string | null;
+  Answer4: string | null;
+  Answer5: string | null;
+  Answer6: string | null;
+  Answer7: string | null;
+  Answer8: string | null;
+  Answer9: string | null;
+  Answer10: string | null;
+  Certificate: string | null;
 } | null;
 export type Specifics = {
   id: string;

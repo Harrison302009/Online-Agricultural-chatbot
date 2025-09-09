@@ -2,7 +2,6 @@
 import {
   Stack,
   Typography,
-  Avatar,
   CssVarsProvider,
   Card,
   CardContent,
@@ -10,7 +9,7 @@ import {
   AspectRatio,
   Skeleton,
 } from "@mui/joy";
-import { CardHeader, CardMedia } from "@mui/material";
+import Avatar from "@mui/joy/Avatar";
 import { CldImage } from "next-cloudinary";
 
 export default function SettingsContainer({

@@ -1,23 +1,21 @@
 "use client";
-import { Box, Button, Stack, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import "../globalicons.css";
 import { NavBar } from "@/components/navbar/navbar";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
-import { MenuBar } from "@/components/menubar/menubar";
 import { PointBack, PointOut } from "@/components/mousecontrols/mousecontrol";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faDiscord,
   faFacebook,
   faLinkedin,
-  faLinkedinIn,
   faXTwitter,
 } from "@fortawesome/free-brands-svg-icons";
-import { faX } from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
 
 export default function About() {
   const router = useRouter();

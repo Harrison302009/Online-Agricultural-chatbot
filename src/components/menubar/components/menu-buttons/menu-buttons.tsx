@@ -1,10 +1,8 @@
-import {
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  Stack,
-  Typography,
-} from "@mui/material";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 export default function MenuButton({
   link,

@@ -1,5 +1,8 @@
 "use client";
-import { Paper, Skeleton, Stack, Typography } from "@mui/material";
+import Paper from "@mui/material/Paper";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import "../../globalicons.css";
 import React, { ElementType, useEffect, useState } from "react";
 import Image from "next/image";

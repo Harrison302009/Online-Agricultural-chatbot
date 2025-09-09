@@ -1,15 +1,13 @@
 "use client";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  Dialog,
-  Stack,
-  Typography,
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
+import Dialog from "@mui/material/Dialog";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import "./globalicons.css";
 import Holder from "@/components/big-component/big-component";
 import { useState, useEffect } from "react";
@@ -124,7 +122,7 @@ export default function Home() {
     EaselPlugin,
     PixiPlugin,
     TextPlugin,
-    CustomEase,
+    CustomEase
   );
   const [location, setLocation] = useState({
     country: "",

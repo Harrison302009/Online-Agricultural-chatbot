@@ -1,21 +1,9 @@
 "use client";
-import {
-  Avatar,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
 import "../../app/globalicons.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faCross, faX } from "@fortawesome/free-solid-svg-icons";
-import { PointBack, PointOut } from "../mousecontrols/mousecontrol";
-import { Mice } from "../mice/mouse";
-import { Controller } from "../mouse-movement-controls/mouse-movement-controls";
 import { useEffect, useState } from "react";
-import router from "next/router";
 import { useSession } from "next-auth/react";
 import MenuButton from "./components/menu-buttons/menu-buttons";
 import { CldImage } from "next-cloudinary";

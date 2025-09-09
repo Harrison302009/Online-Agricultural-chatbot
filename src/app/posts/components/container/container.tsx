@@ -3,7 +3,6 @@
 import {
   Box,
   Stack,
-  Typography,
   Drawer,
   Avatar,
   Collapse,
@@ -24,6 +23,7 @@ import {
   CssVarsProvider,
   Dropdown,
   IconButton,
+  Typography,
   Input,
   Menu,
   MenuItem,
@@ -339,7 +339,7 @@ export default function PostContainer() {
               }}
               onClick={() => setOpen(true)}
             >
-              <Typography variant="h6" sx={{ color: "#1976d2" }}>
+              <Typography level="title-md" sx={{ color: "#1976d2" }}>
                 {session.data?.user?.name?.substring(0, 1).toUpperCase() ||
                   session.data?.user.email?.substring(0, 1).toUpperCase()}
               </Typography>
@@ -365,7 +365,7 @@ export default function PostContainer() {
           )}
         </Stack>
         <Typography
-          variant="h2"
+          level="h2"
           sx={{
             display: "flex",
             position: "relative",
@@ -396,7 +396,7 @@ export default function PostContainer() {
           {messages.map((message) => (
             <div key={message.id}>
               <Typography
-                variant="body1"
+                level="body-md"
                 sx={{
                   fontWeight: "bold",
                   fontFamily: "'Oswald', sans-serif",
@@ -465,7 +465,7 @@ export default function PostContainer() {
                         width={40}
                       />
                     </Badge>
-                    <Typography variant="h4" sx={{ color: "#1976d2" }}>
+                    <Typography level="h4" sx={{ color: "#1976d2" }}>
                       {session.data?.user.name}
                     </Typography>
                   </Stack>
@@ -767,7 +767,7 @@ export default function PostContainer() {
           </form>
           <br />
           <CssVarsProvider>
-            <Typography variant="h3" sx={{ color: "#1976d2" }}>
+            <Typography level="h3" sx={{ color: "#1976d2" }}>
               Recent Posts:
             </Typography>
             <br />
@@ -819,11 +819,11 @@ export default function PostContainer() {
                           height={40}
                           width={40}
                         />
-                        <Typography variant="h4" sx={{ width: "30%" }}>
+                        <Typography level="h4" sx={{ width: "30%" }}>
                           {post.name}
                         </Typography>
                         <Typography
-                          variant="body2"
+                          level="body-sm"
                           sx={{ fontSize: 10, color: "silver", width: "30%" }}
                         >
                           {timeAgo(post.createdAt)}
@@ -851,7 +851,7 @@ export default function PostContainer() {
                           </IconButton>
                         </Stack>
                       </Stack>
-                      <Typography variant="h5">
+                      <Typography level="title-lg">
                         <Markdown>{post.content}</Markdown>
                       </Typography>
                       <br />
@@ -865,14 +865,14 @@ export default function PostContainer() {
                       >
                         <CldImage
                           alt="image1"
-                          src={post.image1}
+                          src={post.image1 || "4567hu"}
                           style={{ display: post.image1 ? "flex" : "none" }}
                           width={480}
                           height={380}
                         />
                         <CldImage
                           alt="image2"
-                          src={post.image2}
+                          src={post.image2 || "4657e67"}
                           style={{ display: post.image2 ? "flex" : "none" }}
                           width={240}
                           height={110}
@@ -893,7 +893,7 @@ export default function PostContainer() {
                           alignItems="center"
                           justifyContent="space-between"
                         >
-                          <Typography variant="h6" color="primary">
+                          <Typography level="title-md" color="primary">
                             Comments
                           </Typography>
                           <IconButton onClick={() => handleToggle(post.id)}>
@@ -912,7 +912,7 @@ export default function PostContainer() {
                               )
                               .map((comment) => (
                                 <Stack key={comment.commentid}>
-                                  <Typography variant="h5">
+                                  <Typography level="title-md">
                                     {comment.value}
                                   </Typography>
                                 </Stack>

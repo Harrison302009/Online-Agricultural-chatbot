@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
 import { getServerSession } from "@/modules/auth/lib/get-server-session/get-server-session";
 import { redirect, useSearchParams } from "next/navigation";
 import mixpanel from "mixpanel-browser";

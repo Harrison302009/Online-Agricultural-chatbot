@@ -6,7 +6,10 @@ import { LatLngTuple } from "leaflet";
 import "../../../globalicons.css";
 import { useRouter } from "next/navigation";
 import Marquee from "react-fast-marquee";
-import { Tooltip, Typography, styled, tooltipClasses } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import styled  from "@mui/material/styles";
+import tooltipClasses from "@mui/material/Tooltip";
 
 interface MapComponentProps {
   center: LatLngTuple;

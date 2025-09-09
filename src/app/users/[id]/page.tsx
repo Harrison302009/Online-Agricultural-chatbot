@@ -1,7 +1,8 @@
 import { getServerSession } from "@/modules/auth/lib/get-server-session/get-server-session";
 import { prisma } from "@/modules/prisma/lib/prisma-client/prisma-client";
 import { CloseOutlined } from "@mui/icons-material";
-import { Avatar, Button, CssVarsProvider, Stack, Typography } from "@mui/joy";
+import { Button, CssVarsProvider, Stack, Typography } from "@mui/joy";
+import Avatar from "@mui/joy/Avatar";
 import { Metadata } from "next";
 import { CldImage } from "next-cloudinary";
 import dynamic from "next/dynamic";

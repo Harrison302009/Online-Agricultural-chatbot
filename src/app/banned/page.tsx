@@ -1,5 +1,5 @@
 "use client";
-import { Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
 
