@@ -57,7 +57,6 @@ export default function Home() {
   });
   useEffect(() => {
     console.log(mixpanel.track("Page View"));
-    console.log("What's wrong");
     gsap.to(".project", {
       rotation: 360,
       duration: 2,

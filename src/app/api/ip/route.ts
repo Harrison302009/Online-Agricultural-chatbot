@@ -14,7 +14,6 @@ export const GET = async (req: NextRequest) => {
     `https://ipinfo.io/${ip}/json?token=d4ce7cc65497d7`,
   );
   const geoData = await geoRes.json();
-  console.log(geoData);
   return new Response(JSON.stringify(geoData), {
     status: 200,
     headers: { "Content-Type": "application/json" },

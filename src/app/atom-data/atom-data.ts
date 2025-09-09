@@ -66,7 +66,7 @@ export const plans = atom<Price[]>([
   },
 ]);
 export const styles = {
-  container: { display: "flex", height: "100vh", backgroundColor: "#f9fafb" },
+  container: { display: "flex", height: "100vh", backgroundColor: "#f1f7fa" },
   sidebar: {
     width: "16rem",
     backgroundColor: "#ffffff",
