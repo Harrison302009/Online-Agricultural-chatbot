@@ -42,7 +42,7 @@ export const POST = async (req: NextRequest) => {
       await prisma.user.update({
         where: { id: session.user.id },
         data: {
-          name: `${title} ${firstName} ${lastName}`,
+          name: `${firstName} ${lastName} ${title}`,
           country,
           phoneNumber: `+${codeFilter.mobileCode} ${phoneNumber}`,
           role,

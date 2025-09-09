@@ -51,21 +51,23 @@ model User {
     phoneNumber            String?
     country                String        @default("Unknown")
     address                String        @default("Unknown")
-    role                   String        @default("student")
+    role                   String        @default("user")
     status                 String        @default("offline")
     isBanned               Boolean       @default(false)
     plan                   String        @default("new")
     receivedMessage        Boolean       @default(false)
     hasPendingApplications Boolean       @default(false)
-    ApplicationStatus      AppStatus     @default(NEUTRAL)
+    ApplicationStatus      String?
+    seenNotifications      Int           @default(0)
     emailVerified          DateTime?
-    image                  String?       @default("vdivydqbavnnlidtxavz")
+    image                  String?       @default("inc9foypm6vykbdcdqya")
     accounts               Account[]
     sessions               Session[]
     Message                Message[]
     ChatMessage            ChatMessage[]
     MessageSent            MessageSent[]
     Exam                   Exam[]
+    Posts                  Posts[]
 }
 
 model VerificationToken {
@@ -112,18 +114,47 @@ model RegisteredUsers {
 
 model Exam {
     examId      String  @id @default(cuid())
-    userId      String
-    user        User   @relation(fields: [userId], references: [id])
-    Answer1     String
-    Certificate String
-    Answer2     String
-    Answer3     String
-    Answer4     String
-    Answer5     String
-    Answer6     String
-    Answer7     String
-    Answer8     String
-    Answer9     String
-    Answer10    String
-    score       Float
+    userId      String?
+    user        User?   @relation(fields: [userId], references: [id])
+    Answer1     String?
+    Certificate String?
+    Answer2     String?
+    Answer3     String?
+    Answer4     String?
+    Answer5     String?
+    Answer6     String?
+    Answer7     String?
+    Answer8     String?
+    Answer9     String?
+    Answer10    String?
+    score       Float?
 }
+
+model Posts {
+    id        String     @id @default(cuid())
+    avatar    String?
+    content   String?
+    createdAt DateTime   @default(now())
+    updatedAt DateTime?  @updatedAt
+    author    User?      @relation(fields: [authorId], references: [id])
+    authorId  String?
+    name      String?
+    image1    String?
+    image2    String?
+    image3    String?
+    image4    String?
+    image5    String?
+    video     String?
+    Comments  Comments[]
+}
+
+model Comments {
+    id          String   @id @default(cuid())
+    value       String?
+    avatar      String?
+    name        String?
+    commentid   String?
+    commentBase Posts?   @relation(fields: [commentid], references: [id])
+    createdAt   DateTime @default(now())
+}
+
