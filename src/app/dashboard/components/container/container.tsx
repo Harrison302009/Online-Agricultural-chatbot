@@ -41,7 +41,7 @@ import {
   Badge,
   Button,
 } from "@mui/joy";
-import Avatar from "@mui/joy/Avatar"
+import Avatar from "@mui/joy/Avatar";
 import { CldImage } from "next-cloudinary";
 import { TotalUsers } from "@/modules/users/actions";
 import { data } from "../countries/countries";

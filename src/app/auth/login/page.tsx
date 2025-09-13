@@ -1,4 +1,3 @@
-
 import { authOptions } from "@/app/api/auth/[...nextauth]/constants";
 import { type Metadata } from "next";
 import { getServerSession } from "next-auth";

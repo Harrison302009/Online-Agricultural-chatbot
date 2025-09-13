@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { MapContainer, TileLayer, TooltipProps, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { LatLngTuple } from "leaflet";
 import "../../../globalicons.css";
@@ -8,8 +8,6 @@ import { useRouter } from "next/navigation";
 import Marquee from "react-fast-marquee";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import styled  from "@mui/material/styles";
-import tooltipClasses from "@mui/material/Tooltip";
 
 interface MapComponentProps {
   center: LatLngTuple;
