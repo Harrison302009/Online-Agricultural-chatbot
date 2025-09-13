@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Stack,
-  Drawer,
-  Avatar,
-  Collapse,
-} from "@mui/material";
+import { Box, Stack, Drawer, Avatar, Collapse } from "@mui/material";
 import { ExpandMore, ExpandLess, SendOutlined } from "@mui/icons-material";
 import { useEffect, useState, useRef } from "react";
 import "../../../globalicons.css";

@@ -122,7 +122,7 @@ export default function Home() {
     EaselPlugin,
     PixiPlugin,
     TextPlugin,
-    CustomEase
+    CustomEase,
   );
   const [location, setLocation] = useState({
     country: "",

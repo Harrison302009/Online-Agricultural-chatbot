@@ -1,11 +1,5 @@
 "use client";
-import {
-  Card,
-  CardCover,
-  CssVarsProvider,
-  Stack,
-  Typography,
-} from "@mui/joy";
+import { Card, CssVarsProvider, Stack, Typography } from "@mui/joy";
 import Avatar from "@mui/joy/Avatar";
 import "../../app/globalicons.css";
 import { useEffect, useState } from "react";

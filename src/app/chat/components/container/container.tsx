@@ -55,13 +55,13 @@ export default function Container() {
                     data: { url: "/chat" },
                     badge: "/Samp.png",
                     requireInteraction: true,
-                  }
+                  },
                 );
               });
             }
           }
         }
-      }
+      },
     );
 
     return () => {
@@ -86,7 +86,7 @@ export default function Container() {
   useEffect(() => {
     chatContainerRef.current?.scrollTo(
       0,
-      chatContainerRef.current.scrollHeight
+      chatContainerRef.current.scrollHeight,
     );
   }, [messages]);
 
@@ -231,7 +231,7 @@ export default function Container() {
             value={input}
             onChange={(e) => {
               setInput(
-                e.target.value.replace(/:\)/g, "😀").replace(/:\(/g, "😟")
+                e.target.value.replace(/:\)/g, "😀").replace(/:\(/g, "😟"),
               );
             }}
             InputProps={{
